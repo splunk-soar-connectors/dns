@@ -20,10 +20,9 @@ import os
 
 # Imports local to this App
 from dns_consts import *
-app_dir = os.path.dirname(os.path.abspath(__file__))
-os.sys.path.insert(0, os.path.join(app_dir, 'dependencies/dnspython'))
-import dns.resolver as resolver  # noqa
-import dns.reversename as reversename  # noqa
+os.sys.path.insert(0, "{}/dnspython".format(os.path.dirname(os.path.abspath(__file__))))
+import dnspython.dns.resolver as resolver  # noqa
+import dnspython.dns.reversename as reversename  # noqa
 import ipaddr  # noqa
 
 
@@ -100,9 +99,7 @@ class DNSConnector(BaseConnector):
         except Exception as e:
             action_result.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
             return action_result.get_status()
-        data = {'ips': ips}
-        data['ip_objects'] = [{'ip': x} for x in ips]
-        action_result.add_data(data)
+        action_result.add_data({'ips': ips})
 
         return action_result.get_status()
 
