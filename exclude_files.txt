@@ -1,3 +1,4 @@
 dns_connector.py
 dns_consts.py
 dns_view.py
+.git*

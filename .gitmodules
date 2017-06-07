@@ -1,3 +1,4 @@
 [submodule "dependencies/dnspython"]
 	path = dependencies/dnspython
 	url = ssh://git@prod-bb-1.phantom.local:7999/per/dnspython.git
+    ignore = dirty
