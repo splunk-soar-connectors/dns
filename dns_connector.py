@@ -92,6 +92,7 @@ class DNSConnector(BaseConnector):
                     ips.append(str(item))
                 formed_results = {'total_ips': len(ips)}
                 action_result.update_summary(formed_results)
+                action_result.update_summary({'cannonical_name': str(dns_response.canonical_name)})
                 action_result.update_summary({'ip': str(dns_response[0])})
                 action_result.set_status(phantom.APP_SUCCESS)
             else:
