@@ -16,7 +16,6 @@ import phantom.app as phantom
 
 from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
-import os
 
 # Imports local to this App
 from dns_consts import *
