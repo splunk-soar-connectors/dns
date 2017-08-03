@@ -20,8 +20,6 @@ import os
 
 # Imports local to this App
 from dns_consts import *
-app_dir = os.path.dirname(os.path.abspath(__file__))
-os.sys.path.insert(0, os.path.join(app_dir, 'dependencies/dnspython'))
 import dns.resolver as resolver  # noqa
 import dns.reversename as reversename  # noqa
 import ipaddr  # noqa
