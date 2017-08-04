@@ -12,8 +12,16 @@
   "product_vendor": "Generic",
   "product_name": "DNS",
   "product_version_regex": ".*",
-  "min_phantom_version": "1.0.240",
+  "min_phantom_version": "2.1.486",
   "logo": "phantom.png",
+  "pip_dependencies": {
+    "wheel": [
+      {
+        "module": "dns",
+        "input_file": "dnspython/dnspython-1.15.0-py2-none-any.whl"
+      }
+    ]
+  },
   "configuration": {
     "dns_server": {
       "description": "IP of the DNS server for lookups",
