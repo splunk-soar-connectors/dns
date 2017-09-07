@@ -243,7 +243,8 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Ip: 52.91.186.198\nHostname: ec2-52-91-186-198.compute-1.amazonaws.com.\nCannonical name: 198.186.91.52.in-addr.arpa."
+                        "Ip: 52.91.186.198\nHostname: ec2-52-91-186-198.compute-1.amazonaws.com.\nCannonical name: 198.186.91.52.in-addr.arpa.",
+                        "The DNS query name does not exist: 123.123.123.123.in-addr.arpa."
                     ]
                 },
                 {
@@ -283,7 +284,8 @@
                         "ip"
                     ],
                     "example_values": [
-                        "52.91.186.198"
+                        "52.91.186.198",
+                        "123.123.123.123"
                     ]
                 },
                 {
