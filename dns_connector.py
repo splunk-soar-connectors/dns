@@ -99,6 +99,8 @@ class DNSConnector(BaseConnector):
                 action_result.set_status(phantom.APP_ERROR, "Target is not a hostname")
                 return action_result.get_status()
         except Exception as e:
+            if ('None of DNS query names exist' in str(e)):
+                return action_result.set_status(phantom.APP_SUCCESS, str(e))
             action_result.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
             return action_result.get_status()
         data = {'ips': ips}
@@ -132,6 +134,8 @@ class DNSConnector(BaseConnector):
                 action_result.set_status(phantom.APP_ERROR, "Target is not an IP")
                 return action_result.get_status()
         except Exception as e:
+            if ('does not exist' in str(e)):
+                return action_result.set_status(phantom.APP_SUCCESS, str(e))
             action_result.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
             return action_result.get_status()
 
@@ -162,6 +166,8 @@ if __name__ == '__main__':
 
     import sys
     import json
+    import pudb
+    pudb.set_trace()
 
     if (len(sys.argv) < 2):
         print "No test json specified as input"

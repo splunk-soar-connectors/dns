@@ -1,228 +1,314 @@
 {
-  "appid": "876ab991-313e-48e7-bccd-e8c9650c239c",
-  "name": "DNS",
-  "description": "This app implements investigative actions like 'lookup domain' and 'lookup ip' that returns DNS Records for the object queried.",
-  "publisher": "Phantom",
-  "package_name": "phantom_dns",
-  "type": "information",
-  "license": "Copyright (c) Phantom Cyber Corporation 2016",
-  "main_module": "dns_connector.pyc",
+    "appid": "876ab991-313e-48e7-bccd-e8c9650c239c",
+    "name": "DNS",
+    "description": "This app implements investigative actions that return DNS Records for the object queried",
+    "publisher": "Phantom",
+    "package_name": "phantom_dns",
+    "type": "information",
+    "license": "Copyright (c) Phantom Cyber Corporation 2016",
+    "main_module": "dns_connector.pyc",
     "app_version": "1.3.21",
     "utctime_updated": "2017-08-04T01:21:52.000000Z",
-  "product_vendor": "Generic",
-  "product_name": "DNS",
-  "product_version_regex": ".*",
-  "min_phantom_version": "2.1.486",
-  "logo": "phantom.png",
-  "pip_dependencies": {
-    "wheel": [
-      {
-        "module": "dns",
-        "input_file": "dnspython/dnspython-1.15.0-py2-none-any.whl"
-      }
+    "product_vendor": "Generic",
+    "product_name": "DNS",
+    "product_version_regex": ".*",
+    "min_phantom_version": "2.1.486",
+    "logo": "phantom.png",
+    "pip_dependencies": {
+        "wheel": [
+            {
+                "module": "dns",
+                "input_file": "dnspython/dnspython-1.15.0-py2-none-any.whl"
+            }
+        ]
+    },
+    "configuration": {
+        "dns_server": {
+            "description": "IP of the DNS server for lookups",
+            "data_type": "string",
+            "required": false,
+            "contains": [
+                "ip",
+                "ipv6"
+            ]
+        }
+    },
+    "actions": [
+        {
+            "action": "test connectivity",
+            "description": "Validate the asset configuration for connectivity",
+            "type": "test",
+            "identifier": "test_asset_connectivity",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "lookup domain",
+            "description": "Query DNS records for a Domain or Host Name",
+            "verbose": "A list of record <b>types</b> to be resolved is supplied, one of which the user may choose as the value for the <b>type</b> parameter, these are:<br><ul><li>A</li><li>AAAA</li><li>CNAME</li><li>HINFO</li><li>ISDN</li><li>MX</li><li>NS</li><li>SOA</li><li>TXT</li></ul>When taking a lookup domain action from a Playbook, the author can look up arbitrary DNS record types by supplying the desired record type as a string for the <b>type</b> parameter.",
+            "type": "investigate",
+            "identifier": "forward_lookup",
+            "read_only": true,
+            "parameters": {
+                "domain": {
+                    "description": "Record to resolve",
+                    "data_type": "string",
+                    "contains": [
+                        "host name",
+                        "domain"
+                    ],
+                    "primary": true,
+                    "required": true
+                },
+                "type": {
+                    "description": "DNS Record Type",
+                    "data_type": "string",
+                    "required": false,
+                    "value_list": [
+                        "A",
+                        "AAAA",
+                        "CNAME",
+                        "HINFO",
+                        "ISDN",
+                        "MX",
+                        "NS",
+                        "SOA",
+                        "TXT"
+                    ]
+                }
+            },
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "dns_view.display_ips",
+                "title": "Lookup Domain"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "None of DNS query names exist: ['ffobaaar.com.', 'ffobaaar.com.localdomain.']",
+                        "Ip: 54.239.25.192, Total ips: 6, Cannonical name: amazon.com."
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_ips",
+                    "column_order": 0,
+                    "data_type": "string",
+                    "example_values": [
+                        1,
+                        6
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.ip",
+                    "column_name": "IP Address",
+                    "column_order": 1,
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "54.239.25.192"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.hostname",
+                    "column_name": "Hostname",
+                    "column_order": 2,
+                    "data_type": "string",
+                    "contains": [
+                        "host name",
+                        "domain"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.canonical_name",
+                    "column_order": 3,
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.domain",
+                    "data_type": "string",
+                    "contains": [
+                        "host name",
+                        "domain"
+                    ],
+                    "example_values": [
+                        "ffobaaar.com",
+                        "phantomcyber.com",
+                        "amazon.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.type",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.ip_objects.*.ip",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "54.239.25.192"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.ips",
+                    "data_type": "string",
+                    "example_values": [
+                        "54.239.26.128"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.cannonical_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "phantomcyber.com.",
+                        "amazon.com."
+                    ]
+                }
+            ],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "lookup ip",
+            "description": "Query Reverse DNS records for an IP",
+            "verbose": "The <b>lookup ip</b> action takes an IP address parameter. The IP address (IPv4 or IPv6) will be looked up against the appropriate reverse lookup DNS records, and any associate hostname(s) will be returned. Only <b>PTR</b> type lookups are returned.",
+            "type": "investigate",
+            "identifier": "reverse_lookup",
+            "read_only": true,
+            "parameters": {
+                "ip": {
+                    "description": "IP to resolve",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "primary": true,
+                    "required": true
+                }
+            },
+            "render": {
+                "width": 12,
+                "title": "DNS Lookup",
+                "type": "table",
+                "height": 2
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string",
+                    "example_values": [
+                        "ec2-52-91-186-198.compute-1.amazonaws.com."
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Ip: 52.91.186.198\nHostname: ec2-52-91-186-198.compute-1.amazonaws.com.\nCannonical name: 198.186.91.52.in-addr.arpa."
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.canonical_name",
+                    "column_order": 2,
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.ip",
+                    "column_name": "IP Address",
+                    "column_order": 0,
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "52.91.186.198"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.hostname",
+                    "column_name": "Hostname",
+                    "column_order": 1,
+                    "data_type": "string",
+                    "contains": [
+                        "host name",
+                        "domain"
+                    ],
+                    "example_values": [
+                        "ec2-52-91-186-198.compute-1.amazonaws.com."
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ip",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "52.91.186.198"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.cannonical_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "198.186.91.52.in-addr.arpa."
+                    ]
+                }
+            ],
+            "versions": "EQ(*)"
+        }
     ]
-  },
-  "configuration": {
-    "dns_server": {
-      "description": "IP of the DNS server for lookups",
-      "data_type": "string",
-      "required": false,
-      "contains": ["ip", "ipv6"]
-    }
-  },
-  "actions": [
-    {
-      "action": "test connectivity",
-      "description": "Validate the asset configuration for connectivity.",
-      "type": "test",
-      "identifier": "test_asset_connectivity",
-      "read_only": true,
-      "parameters": {
-      },
-      "output": [],
-      "versions": "EQ(*)"
-    },
-    {
-      "action": "lookup domain",
-      "description": "Query DNS records for a Domain or Host Name",
-      "verbose":"A list of record <b>types</b> to be resolved is supplied, one of which the user may choose as the value for the <b>type</b> parameter, these are:<br><ul><li>A</li><li>AAAA</li><li>CNAME</li><li>HINFO</li><li>ISDN</li><li>MX</li><li>NS</li><li>SOA</li><li>TXT</li></ul>When taking a lookup domain action from a Playbook, the author can look up arbitrary DNS record types by supplying the desired record type as a string for the <b>type</b> parameter.",
-      "type": "investigate",
-      "identifier": "forward_lookup",
-      "read_only": true,
-      "parameters": {
-        "domain": {
-          "description": "Record to resolve",
-          "data_type": "string",
-          "contains": [
-            "host name",
-            "domain"
-          ],
-          "primary": true,
-          "required": true
-        },
-        "type": {
-          "description": "DNS Record Type",
-          "data_type": "string",
-          "required": false,
-          "value_list":["A","AAAA", "CNAME", "HINFO", "ISDN", "MX", "NS", "SOA", "TXT"]
-        }
-      },
-      "render": {
-        "type": "custom",
-        "width": 10,
-        "height": 5,
-        "view": "dns_view.display_ips",
-        "title": "Lookup Domain"
-      },
-      "output": [
-        {
-          "data_path": "action_result.data",
-          "data_type": "string"
-        },
-        {
-          "data_path": "action_result.status",
-          "data_type": "string"
-        },
-        {
-          "data_path": "action_result.message",
-          "data_type": "string"
-        },
-        {
-          "data_path": "action_result.summary.total_ips",
-          "column_order": 0,
-          "data_type": "string"
-        },
-        {
-          "data_path": "action_result.summary.ip",
-          "column_name": "IP Address",
-          "column_order": 1,
-          "data_type": "string",
-          "contains": [
-            "ip"
-          ]
-        },
-        {
-          "data_path": "action_result.summary.hostname",
-          "column_name": "Hostname",
-          "column_order": 2,
-          "data_type": "string",
-          "contains": [
-            "host name", "domain"
-          ]
-        },
-        {
-          "data_path": "action_result.summary.canonical_name",
-          "column_order": 3,
-          "data_type": "string"
-        },
-        {
-          "data_path": "action_result.parameter.domain",
-          "data_type": "string",
-          "contains": ["host name", "domain"]
-        },
-        {
-          "data_path": "action_result.parameter.type",
-          "data_type": "string"
-        },
-        {
-          "data_path": "summary.total_objects",
-          "data_type": "numeric"
-        },
-        {
-          "data_path": "summary.total_objects_successful",
-          "data_type": "numeric"
-        },
-        {
-          "data_path": "action_result.data.*.ip_objects.*.ip",
-          "data_type": "string",
-          "contains": [ "ip" ]
-        },
-        {
-          "data_path": "action_result.data.*.ips",
-          "data_type": "string"
-        }
-      ],
-      "versions": "EQ(*)"
-    },
-    {
-      "action": "lookup ip",
-      "description": "IP Address",
-      "description": "Query Reverse DNS records for an IP",
-      "verbose": "The <b>lookup ip</b> action takes an IP address parameter. The IP address (IPv4 or IPv6) will be looked up against the appropriate reverse lookup DNS records, and any associate hostname(s) will be returned. Only <b>PTR</b> type lookups are returned.",
-      "type": "investigate",
-      "identifier": "reverse_lookup",
-      "read_only": true,
-      "parameters": {
-        "ip": {
-          "description": "IP to resolve",
-          "data_type": "string",
-          "contains": [
-            "ip"
-          ],
-          "primary": true,
-          "required": true
-        }
-      },
-      "render": {
-        "width": 12,
-        "title": "DNS Lookup",
-        "type": "table",
-        "height": 2
-      },
-      "output": [
-        {
-          "data_path": "action_result.data",
-          "data_type": "string"
-        },
-        {
-          "data_path": "action_result.status",
-          "data_type": "string"
-        },
-        {
-          "data_path": "action_result.message",
-          "data_type": "string"
-        },
-        {
-          "data_path": "action_result.summary.canonical_name",
-          "column_order": 2,
-          "data_type": "string"
-        },
-        {
-          "data_path": "action_result.summary.ip",
-          "column_name": "IP Address",
-          "column_order": 0,
-          "data_type": "string",
-          "contains": [
-            "ip"
-          ]
-        },
-        {
-          "data_path": "action_result.summary.hostname",
-          "column_name": "Hostname",
-          "column_order": 1,
-          "data_type": "string",
-          "contains": [
-            "host name", "domain"
-          ]
-        },
-        {
-          "data_path": "action_result.parameter.ip",
-          "data_type": "string",
-          "contains": [
-            "ip"
-          ]
-        },
-        {
-          "data_path": "summary.total_objects",
-          "data_type": "numeric"
-        },
-        {
-          "data_path": "summary.total_objects_successful",
-          "data_type": "numeric"
-        }
-      ],
-      "versions": "EQ(*)"
-    }
-  ]
 }
-
