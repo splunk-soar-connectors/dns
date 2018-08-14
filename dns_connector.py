@@ -39,6 +39,7 @@ class DNSConnector(BaseConnector):
 
         config = self.get_config()
         self._server = config.get('dns_server')
+        self._host_name = config.get('host_name', 'www.splunk.com')
 
         return phantom.APP_SUCCESS
 
@@ -49,8 +50,8 @@ class DNSConnector(BaseConnector):
             self.save_progress("Checking connectivity to your defined lookup server (" + str(dnslookup.nameservers[0]) + ")...")
             try:
                 dnslookup.lifetime = 5
-                response = str(dnslookup.query('www.phantom.us', 'A')[0])
-                self.save_progress("Found a record for www.phantom.us as " + response + "...")
+                response = str(dnslookup.query(self._host_name, 'A')[0])
+                self.save_progress("Found a record for {0} as {1}...".format(self._host_name, response))
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
                 self.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
@@ -58,8 +59,8 @@ class DNSConnector(BaseConnector):
         else:
             self.save_progress("Using OS level lookup server (" + dnslookup.nameservers[0] + ")...")
             try:
-                response = str(resolver.query('www.phantom.us', 'A')[0])
-                self.save_progress("Found a record for www.phantom.us as " + response + "...")
+                response = str(resolver.query(self._host_name, 'A')[0])
+                self.save_progress("Found a record for {0} as {1}...".format(self._host_name, response))
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
                 self.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)

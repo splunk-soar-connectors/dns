@@ -32,6 +32,15 @@
                 "ip",
                 "ipv6"
             ]
+        },
+        "host_name": {
+            "description": "Host name to be used in test connectivity",
+            "data_type": "string",
+            "required": false,
+            "contains": [
+                "hostname"
+            ],
+            "default": "www.splunk.com"
         }
     },
     "actions": [
