@@ -105,50 +105,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "None of DNS query names exist: ['ffobaaar.com.', 'ffobaaar.com.localdomain.']",
-                        "Ip: 54.239.25.192, Total ips: 6, Cannonical name: amazon.com."
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.total_ips",
-                    "column_order": 0,
-                    "data_type": "string",
-                    "example_values": [
-                        1,
-                        6
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.ip",
-                    "column_name": "IP Address",
-                    "column_order": 1,
-                    "data_type": "string",
-                    "contains": [
-                        "ip"
-                    ],
-                    "example_values": [
-                        "54.239.25.192"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.hostname",
-                    "column_name": "Hostname",
-                    "column_order": 2,
-                    "data_type": "string",
-                    "contains": [
-                        "host name",
-                        "domain"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.canonical_name",
-                    "column_order": 3,
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.parameter.domain",
                     "data_type": "string",
                     "contains": [
@@ -166,21 +122,7 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "summary.total_objects",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
-                },
-                {
-                    "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.ip_objects.*.ip",
+                    "data_path": "action_result.data.*.record_info_objects.*.record_info",
                     "data_type": "string",
                     "contains": [
                         "ip"
@@ -190,7 +132,7 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.ips",
+                    "data_path": "action_result.data.*.record_infos",
                     "data_type": "string",
                     "example_values": [
                         "54.239.26.128"
@@ -205,6 +147,64 @@
                     "example_values": [
                         "phantomcyber.com.",
                         "amazon.com."
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.canonical_name",
+                    "column_order": 3,
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.hostname",
+                    "column_name": "Hostname",
+                    "column_order": 2,
+                    "data_type": "string",
+                    "contains": [
+                        "host name",
+                        "domain"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.record_info",
+                    "column_name": "IP Address",
+                    "column_order": 1,
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "54.239.25.192"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_record_infos",
+                    "column_order": 0,
+                    "data_type": "string",
+                    "example_values": [
+                        1,
+                        6
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "None of DNS query names exist: ['ffobaaar.com.', 'ffobaaar.com.localdomain.']",
+                        "Record info: 54.239.25.192, Total record infos: 6, Cannonical name: amazon.com."
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
                     ]
                 }
             ],
@@ -236,13 +236,6 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.data",
-                    "data_type": "string",
-                    "example_values": [
-                        "ec2-52-91-186-198.compute-1.amazonaws.com."
-                    ]
-                },
-                {
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
@@ -250,29 +243,34 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.message",
+                    "data_path": "action_result.parameter.ip",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "52.91.186.198",
+                        "123.123.123.123"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data",
                     "data_type": "string",
                     "example_values": [
-                        "Ip: 52.91.186.198\nHostname: ec2-52-91-186-198.compute-1.amazonaws.com.\nCannonical name: 198.186.91.52.in-addr.arpa.",
-                        "The DNS query name does not exist: 123.123.123.123.in-addr.arpa."
+                        "ec2-52-91-186-198.compute-1.amazonaws.com."
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.cannonical_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "198.186.91.52.in-addr.arpa."
                     ]
                 },
                 {
                     "data_path": "action_result.summary.canonical_name",
                     "column_order": 2,
                     "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.summary.ip",
-                    "column_name": "IP Address",
-                    "column_order": 0,
-                    "data_type": "string",
-                    "contains": [
-                        "ip"
-                    ],
-                    "example_values": [
-                        "52.91.186.198"
-                    ]
                 },
                 {
                     "data_path": "action_result.summary.hostname",
@@ -288,14 +286,23 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.parameter.ip",
+                    "data_path": "action_result.summary.ip",
+                    "column_name": "IP Address",
+                    "column_order": 0,
                     "data_type": "string",
                     "contains": [
                         "ip"
                     ],
                     "example_values": [
-                        "52.91.186.198",
-                        "123.123.123.123"
+                        "52.91.186.198"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Ip: 52.91.186.198\nHostname: ec2-52-91-186-198.compute-1.amazonaws.com.\nCannonical name: 198.186.91.52.in-addr.arpa.",
+                        "The DNS query name does not exist: 123.123.123.123.in-addr.arpa."
                     ]
                 },
                 {
@@ -310,13 +317,6 @@
                     "data_type": "numeric",
                     "example_values": [
                         1
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.cannonical_name",
-                    "data_type": "string",
-                    "example_values": [
-                        "198.186.91.52.in-addr.arpa."
                     ]
                 }
             ],
