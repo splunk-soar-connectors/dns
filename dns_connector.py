@@ -39,20 +39,24 @@ class DNSConnector(BaseConnector):
         dnslookup = resolver.Resolver()
         if self._server:
             dnslookup.nameservers = [self._server.encode("utf-8")]
-            self.save_progress("Checking connectivity to your defined lookup server (" + str(dnslookup.nameservers[0]) + ")...")
+            self.save_progress(
+                "Checking connectivity to your defined lookup server (" + str(dnslookup.nameservers[0]) + ")...")
             try:
                 dnslookup.lifetime = 5
                 response = str(dnslookup.query(self._host_name, 'A')[0])
-                self.save_progress("Found a record for {0} as {1}...".format(self._host_name, response))
+                self.save_progress("Found a record for {0} as {1}...".format(
+                    self._host_name, response))
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
                 self.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
                 return self.get_status()
         else:
-            self.save_progress("Using OS level lookup server (" + dnslookup.nameservers[0] + ")...")
+            self.save_progress(
+                "Using OS level lookup server (" + dnslookup.nameservers[0] + ")...")
             try:
                 response = str(resolver.query(self._host_name, 'A')[0])
-                self.save_progress("Found a record for {0} as {1}...".format(self._host_name, response))
+                self.save_progress("Found a record for {0} as {1}...".format(
+                    self._host_name, response))
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
                 self.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
@@ -76,28 +80,32 @@ class DNSConnector(BaseConnector):
             if (server):
                 dnslookup.nameservers = [server]
             if not phantom.is_ip(host):
-                ips = []
+                record_infos = []
                 dns_response = dnslookup.query(host, type)
                 for item in dns_response:
-                    ips.append(str(item))
-                formed_results = {'total_ips': len(ips)}
+                    record_infos.append(str(item))
+                formed_results = {'total_record_infos': len(record_infos)}
                 action_result.update_summary(formed_results)
                 try:
-                    action_result.update_summary({'cannonical_name': str(dns_response.canonical_name)})
-                    action_result.update_summary({'ip': str(dns_response[0])})
+                    action_result.update_summary(
+                        {'cannonical_name': str(dns_response.canonical_name)})
+                    action_result.update_summary(
+                        {'record_info': str(dns_response[0])})
                 except:
                     pass
                 action_result.set_status(phantom.APP_SUCCESS)
             else:
-                action_result.set_status(phantom.APP_ERROR, "Target is not a hostname")
+                action_result.set_status(
+                    phantom.APP_ERROR, "Target is not a hostname")
                 return action_result.get_status()
         except Exception as e:
             if ('None of DNS query names exist' in str(e)):
                 return action_result.set_status(phantom.APP_SUCCESS, str(e))
             action_result.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
             return action_result.get_status()
-        data = {'ips': ips}
-        data['ip_objects'] = [{'ip': x} for x in ips]
+        data = {'record_infos': record_infos}
+        data['record_info_objects'] = [
+            {'record_info': x} for x in record_infos]
         action_result.add_data(data)
 
         return action_result.get_status()
@@ -117,14 +125,17 @@ class DNSConnector(BaseConnector):
             if (server):
                 dnslookup.nameservers = [server]
             if phantom.is_ip(host) or ipaddr.IPv6Address(host):
-                response = dnslookup.query(reversename.from_address(host), 'PTR')
+                response = dnslookup.query(
+                    reversename.from_address(host), 'PTR')
                 dns_response = str(response[0])
                 formed_results = {'ip': host, 'hostname': dns_response}
                 action_result.update_summary(formed_results)
-                action_result.update_summary({'cannonical_name': str(response.canonical_name)})
+                action_result.update_summary(
+                    {'cannonical_name': str(response.canonical_name)})
                 action_result.set_status(phantom.APP_SUCCESS)
             else:
-                action_result.set_status(phantom.APP_ERROR, "Target is not an IP")
+                action_result.set_status(
+                    phantom.APP_ERROR, "Target is not an IP")
                 return action_result.get_status()
         except Exception as e:
             if ('does not exist' in str(e)):
