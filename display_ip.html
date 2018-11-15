@@ -100,21 +100,34 @@
 <br>
 
     <!-- IPs -->
-      {% if result.data.ips %}
+      {% if result.data.record_infos %}
       <table class="wf-table-horizontal">
-        <tr><th>IP</th></tr>
-        {% for curr_ip in result.data.ips %}
-        <tr>
-          <td><a href="javascript:;" onclick="context_menu(this, [{'contains': ['ip'], 'value': '{{ curr_ip|escapejs }}' }], 0, {{ container.id }}, null, false);">
-              {{ curr_ip }}
-              &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
-          </a></td>
-        </tr>
-        {% endfor %}
+        {% if result.param.type == 'A' or result.param.type == 'AAAA' %}
+          <tr><th>IP</th></tr>  
+        {% else %}
+          <tr><th>Record Info</th></tr>
+        {% endif %}
+        {% if result.param.type == 'A' or result.param.type == 'AAAA' %}
+          {% for record_info in result.data.record_infos %}
+          <tr>
+            <td><a href="javascript:;" onclick="context_menu(this, [{'contains': ['ip', 'ipv6'], 'value': '{{ record_info|escapejs }}' }], 0, {{ container.id }}, null, false);">
+                {{ record_info }}
+                &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
+            </a></td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          {% for record_info in result.data.record_infos %}
+            <tr>
+              <td>{{ record_info }}</td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+
       </table>
       <br>
       {% else %}
-      <p> No IPs in results </p>
+      <p> No Record Info in results </p>
       {% endif %}
 
 
