@@ -52,7 +52,7 @@ class DNSConnector(BaseConnector):
                 return self.get_status()
         else:
             self.save_progress(
-                "Using OS level lookup server (" + dnslookup.nameservers[0] + ")...")
+                "Using OS level lookup server ({0})...".format(dnslookup.nameservers[0]))
             try:
                 response = str(resolver.query(self._host_name, 'A')[0])
                 self.save_progress("Found a record for {0} as {1}...".format(
