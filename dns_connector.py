@@ -40,7 +40,7 @@ class DNSConnector(BaseConnector):
         if self._server:
             dnslookup.nameservers = [self._server.encode("utf-8")]
             self.save_progress(
-                "Checking connectivity to your defined lookup server (" + str(dnslookup.nameservers[0]) + ")...")
+                "Checking connectivity to your defined lookup server ({0})...".format(str(dnslookup.nameservers[0])))
             try:
                 dnslookup.lifetime = 5
                 response = str(dnslookup.query(self._host_name, 'A')[0])
