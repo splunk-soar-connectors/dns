@@ -1,4 +1,4 @@
 [submodule "dependencies/dnspython"]
 	path = dnspython
-	url = ssh://git@bitbucket.phantom.us:7999/per/dnspython.git
+	url = git@cd.splunkdev.com:phantom-external/dnspython.git
         ignore = dirty
