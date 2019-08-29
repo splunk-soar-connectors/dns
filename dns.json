@@ -19,7 +19,7 @@
         "wheel": [
             {
                 "module": "dns",
-                "input_file": "dnspython/dnspython-1.15.0-py2-none-any.whl"
+                "input_file": "dnspython/dnspython-1.16.0-py2.py3-none-any.whl"
             }
         ]
     },
