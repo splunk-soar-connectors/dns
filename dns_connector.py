@@ -14,6 +14,8 @@ from dns_consts import *
 import dns.resolver as resolver  # noqa
 import dns.reversename as reversename  # noqa
 import ipaddr  # noqa
+import requests
+import json
 
 
 # Define the App Class
@@ -219,7 +221,7 @@ if __name__ == '__main__':
         in_json = json.loads(in_json)
         print(json.dumps(in_json, indent=4))
 
-        connector = MimecastConnector()
+        connector = DNSConnector()
         connector.print_progress_message = True
 
         if (session_id is not None):
