@@ -5,21 +5,22 @@
     "publisher": "Phantom",
     "package_name": "phantom_dns",
     "type": "information",
-    "license": "Copyright (c) 2016-2018 Splunk Inc.",
-    "main_module": "dns_connector.pyc",
+    "license": "Copyright (c) 2016-2020 Splunk Inc.",
+    "main_module": "dns_connector.py",
     "app_version": "1.3.35",
     "utctime_updated": "2018-12-20T02:50:42.000000Z",
     "product_vendor": "Generic",
     "product_name": "DNS",
     "product_version_regex": ".*",
-    "min_phantom_version": "3.5.210",
+    "min_phantom_version": "4.5.15922",
+    "python_version": "3",
     "logo": "logo_phantom.svg",
     "logo_dark": "logo_phantom_dark.svg",
     "pip_dependencies": {
         "wheel": [
             {
                 "module": "dns",
-                "input_file": "dnspython/dnspython-1.15.0-py2-none-any.whl"
+                "input_file": "dnspython/dnspython-1.16.0-py2.py3-none-any.whl"
             }
         ]
     },
