@@ -13,7 +13,7 @@ from phantom.action_result import ActionResult
 from dns_consts import *
 import dns.resolver as resolver  # noqa
 import dns.reversename as reversename  # noqa
-import ipaddr  # noqa
+import ipaddress  # noqa
 import requests
 import json
 
@@ -126,7 +126,7 @@ class DNSConnector(BaseConnector):
             dnslookup = resolver.Resolver()
             if (server):
                 dnslookup.nameservers = [server]
-            if phantom.is_ip(host) or ipaddr.IPv6Address(host):
+            if phantom.is_ip(host) or ipaddress.IPv6Address(host):
                 response = dnslookup.query(
                     reversename.from_address(host), 'PTR')
                 dns_response = str(response[0])
