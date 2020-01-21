@@ -128,23 +128,19 @@ class DNSConnector(BaseConnector):
             dnslookup = resolver.Resolver()
             if (server):
                 dnslookup.nameservers = [server]
-            try:
-                if phantom.is_ip(host) or ipaddress.IPv6Address(host):
-                    response = dnslookup.query(
-                        reversename.from_address(host), 'PTR')
-                    dns_response = str(response[0])
-                    formed_results = {'ip': host, 'hostname': dns_response}
-                    action_result.update_summary(formed_results)
-                    action_result.update_summary(
-                        {'cannonical_name': str(response.canonical_name)})
-                    action_result.set_status(phantom.APP_SUCCESS)
-                else:
-                    action_result.set_status(
-                        phantom.APP_ERROR, "Target is not an IP")
-                    return action_result.get_status()
-            except ipaddress.AddressValueError as e:
-                return action_result.set_status(
-                    phantom.APP_ERROR, "Lookup query failed. Error string: '{0}' is not a valid IP address".format(host))
+            if phantom.is_ip(host) or ipaddress.IPv6Address(host):
+                response = dnslookup.query(
+                    reversename.from_address(host), 'PTR')
+                dns_response = str(response[0])
+                formed_results = {'ip': host, 'hostname': dns_response}
+                action_result.update_summary(formed_results)
+                action_result.update_summary(
+                    {'cannonical_name': str(response.canonical_name)})
+                action_result.set_status(phantom.APP_SUCCESS)
+            else:
+                action_result.set_status(
+                    phantom.APP_ERROR, "Target is not an IP")
+                return action_result.get_status()
         except Exception as e:
             if ('does not exist' in str(e)):
                 return action_result.set_status(phantom.APP_SUCCESS, str(e))
