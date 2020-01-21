@@ -17,6 +17,8 @@ import ipaddress  # noqa
 import requests
 import json
 
+from builtins import str
+
 
 # Define the App Class
 class DNSConnector(BaseConnector):
@@ -120,7 +122,7 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = param['ip']
+        host = str(param['ip'])
 
         try:
             dnslookup = resolver.Resolver()
