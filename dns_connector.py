@@ -128,7 +128,7 @@ class DNSConnector(BaseConnector):
             dnslookup = resolver.Resolver()
             if (server):
                 dnslookup.nameservers = [server]
-            if phantom.is_ip(host) or ipaddress.ip_address(host):
+            if phantom.is_ip(host) or ipaddress.ip_address(host):  # changed module
                 response = dnslookup.query(
                     reversename.from_address(host), 'PTR')
                 dns_response = str(response[0])
