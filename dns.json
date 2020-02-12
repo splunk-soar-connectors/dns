@@ -17,8 +17,8 @@
         "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 01/2020)"
     ],
     "python_version": "3",
-    "logo": "logo_phantom.svg",
-    "logo_dark": "logo_phantom_dark.svg",
+    "logo": "logo_splunk.svg",
+    "logo_dark": "logo_splunk_dark.svg",
     "pip_dependencies": {
         "wheel": [
             {
