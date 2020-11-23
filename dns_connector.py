@@ -10,6 +10,7 @@ from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
 
 # Imports local to this App
+from bs4 import UnicodeDammit
 from dns_consts import *
 import dns.resolver as resolver  # noqa
 import dns.reversename as reversename  # noqa
@@ -22,7 +23,6 @@ from builtins import str
 
 # Define the App Class
 class DNSConnector(BaseConnector):
-
     ACTION_ID_FORWARD_LOOKUP = "forward_lookup"
     ACTION_ID_REVERSE_LOOKUP = "reverse_lookup"
 
@@ -34,17 +34,63 @@ class DNSConnector(BaseConnector):
     def initialize(self):
 
         config = self.get_config()
-        self._server = config.get('dns_server')
-        self._host_name = config.get('host_name', 'www.splunk.com')
+        self._server = self._handle_py_ver_compat_for_input_str(config.get('dns_server'))
+        self._host_name = self._handle_py_ver_compat_for_input_str(config.get('host_name', 'www.splunk.com'))
 
         return phantom.APP_SUCCESS
+
+    def _handle_py_ver_compat_for_input_str(self, input_str):
+
+        """
+
+        This method returns the encoded|original string based on the Python version.
+
+        :param input_str: Input string to be processed
+
+        :return: input_str (Processed input string based on following logic 'input_str - Python 3; encoded input_str - Python 2')
+
+        """
+
+        try:
+
+            if input_str and self._python_version < 3:
+                input_str = UnicodeDammit(input_str).unicode_markup.encode('utf-8')
+
+        except:
+
+            self.debug_print("Error occurred while handling python 2to3 compatibility for the input string")
+
+        return input_str
+
+    def _is_ip(self, input_ip_address):
+
+        """ Function that checks given address and return True if address is valid IPv4 or IPV6 address.
+
+        :param input_ip_address: IP address
+
+        :return: status (success/failure)
+
+        """
+
+        ip_address_input = input_ip_address
+
+        try:
+
+            ipaddress.ip_address(UnicodeDammit(ip_address_input).unicode_markup)
+
+        except:
+
+            return False
+
+        return True
 
     def _test_connectivity(self):
         dnslookup = resolver.Resolver()
         if self._server:
-            dnslookup.nameservers = [self._server.encode("utf-8")]
-            self.save_progress(
-                "Checking connectivity to your defined lookup server ({0})...".format(str(dnslookup.nameservers[0])))
+            dnslookup.nameservers = [self._handle_py_ver_compat_for_input_str(self._server.encode("utf-8"))]
+            if dnslookup.nameservers:
+                self.save_progress("Checking connectivity to your defined lookup server ({0})...".format
+                                   (dnslookup.nameservers[0]))
             try:
                 dnslookup.lifetime = 5
                 response = str(dnslookup.query(self._host_name, 'A')[0])
@@ -74,16 +120,16 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = param['domain']
+        host = self._handle_py_ver_compat_for_input_str(param['domain'])
         type = 'A'
         if param.get('type'):
-            type = param['type']
+            type = self._handle_py_ver_compat_for_input_str(param['type'])
 
         try:
             dnslookup = resolver.Resolver()
             if (server):
                 dnslookup.nameservers = [server]
-            if not phantom.is_ip(host):
+            if not self._is_ip(host):
                 record_infos = []
                 dns_response = dnslookup.query(host, type)
                 for item in dns_response:
@@ -122,13 +168,13 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = str(param['ip'])
+        host = self._handle_py_ver_compat_for_input_str(param['ip'])
 
         try:
             dnslookup = resolver.Resolver()
             if (server):
                 dnslookup.nameservers = [server]
-            if phantom.is_ip(host) or ipaddress.ip_address(host):  # changed module
+            if self._is_ip(host):  # changed module
                 response = dnslookup.query(
                     reversename.from_address(host), 'PTR')
                 dns_response = str(response[0])
@@ -190,9 +236,9 @@ if __name__ == '__main__':
     password = args.password
 
     if (username is not None and password is None):
-
         # User specified a username but not a password, so ask
         import getpass
+
         password = getpass.getpass("Password: ")
 
     if (username and password):
