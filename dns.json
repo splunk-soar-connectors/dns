@@ -2,7 +2,7 @@
     "appid": "876ab991-313e-48e7-bccd-e8c9650c239c",
     "name": "DNS",
     "description": "This app implements investigative actions that return DNS Records for the object queried",
-    "publisher": "Phantom",
+    "publisher": "Splunk",
     "package_name": "phantom_dns",
     "type": "information",
     "license": "Copyright (c) 2016-2020 Splunk Inc.",
