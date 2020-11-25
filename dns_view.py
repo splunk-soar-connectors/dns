@@ -23,7 +23,7 @@ def get_ctx_result(result):
     return ctx_result
 
 
-def display_ips(all_app_runs, context):
+def display_ips(provides, all_app_runs, context):
 
     context['results'] = results = []
     for summary, action_results in all_app_runs:
