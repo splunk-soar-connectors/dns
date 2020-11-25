@@ -33,7 +33,7 @@
             "data_type": "string"
         },
         "host_name": {
-            "description": "Host name to be used in test connectivity",
+            "description": "Hostname to be used in test connectivity",
             "data_type": "string",
             "default": "www.splunk.com"
         }
@@ -107,8 +107,6 @@
                         "domain"
                     ],
                     "example_values": [
-                        "ffobaaar.com",
-                        "phantomtest.com",
                         "test.com"
                     ]
                 },
@@ -254,10 +252,7 @@
                 },
                 {
                     "data_path": "action_result.data",
-                    "data_type": "string",
-                    "example_values": [
-                        "ec2-52-91-186-198.compute-1.amazonaws.com."
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.summary.cannonical_name",
@@ -281,7 +276,7 @@
                         "domain"
                     ],
                     "example_values": [
-                        "ec2-52-91-186-198.compute-1.amazonaws.com."
+                        "ec2-52-91-186-198.compute-1.test.com."
                     ]
                 },
                 {
@@ -300,7 +295,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Ip: 122.122.122.122\nHostname: ec2-52-91-186-198.compute-1.amazonaws.com.\nCannonical name: 122.122.122.122.in-addr.arpa.",
+                        "Ip: 122.122.122.122\nHostname: ec2-52-91-186-198.compute-1.test.com.\nCannonical name: 122.122.122.122.in-addr.arpa.",
                         "The DNS query name does not exist: 123.123.123.123.in-addr.arpa."
                     ]
                 },
