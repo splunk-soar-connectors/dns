@@ -62,6 +62,36 @@ class DNSConnector(BaseConnector):
 
         return input_str
 
+    def _get_error_message_from_exception(self, e):
+        """ This function is used to get appropriate error message from the exception.
+        :param e: Exception object
+        :return: error message
+        """
+        error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
+        error_code = "Error code unavailable"
+        try:
+            if e.args:
+                if len(e.args) > 1:
+                    error_code = e.args[0]
+                    error_msg = e.args[1]
+                elif len(e.args) == 1:
+                    error_code = "Error code unavailable"
+                    error_msg = e.args[0]
+            else:
+                error_code = "Error code unavailable"
+                error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
+        except:
+            error_code = "Error code unavailable"
+            error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
+        try:
+            error_msg = self._handle_py_ver_compat_for_input_str(error_msg)
+        except TypeError:
+            error_msg = "Error occurred while connecting to the DNS server. Please check the asset configuration and|or the action parameters."
+        except:
+            error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
+
+        return "Error Code: {0}. Error Message: {1}".format(error_code, error_msg)
+
     def _is_ip(self, input_ip_address):
 
         """
@@ -118,10 +148,10 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = self._handle_py_ver_compat_for_input_str(param['domain'])
+        host = param['domain']
         type = 'A'
         if param.get('type'):
-            type = self._handle_py_ver_compat_for_input_str(param['type'])
+            type = param['type']
 
         try:
             dnslookup = resolver.Resolver()
@@ -147,8 +177,9 @@ class DNSConnector(BaseConnector):
                     phantom.APP_ERROR, "Target is not a hostname")
                 return action_result.get_status()
         except Exception as e:
-            if ('None of DNS query names exist' in str(e)):
-                return action_result.set_status(phantom.APP_SUCCESS, str(e))
+            error_message = self._get_error_message_from_exception(e)
+            if ('None of DNS query names exist' in error_message):
+                return action_result.set_status(phantom.APP_SUCCESS, error_message)
             action_result.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
             return action_result.get_status()
         data = {'record_infos': record_infos}
@@ -166,7 +197,7 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = self._handle_py_ver_compat_for_input_str(param['ip'])
+        host = param['ip']
 
         try:
             dnslookup = resolver.Resolver()
@@ -186,8 +217,9 @@ class DNSConnector(BaseConnector):
                     phantom.APP_ERROR, "Target is not an IP")
                 return action_result.get_status()
         except Exception as e:
-            if ('does not exist' in str(e)):
-                return action_result.set_status(phantom.APP_SUCCESS, str(e))
+            error_message = self._get_error_message_from_exception(e)
+            if ('does not exist' in error_message):
+                return action_result.set_status(phantom.APP_SUCCESS, error_message)
             action_result.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
             return action_result.get_status()
 
