@@ -120,10 +120,10 @@ class DNSConnector(BaseConnector):
                 response = str(dnslookup.query(self._host_name, 'A')[0])
                 self.save_progress("Found a record for {0} as {1}...".format(
                     self._host_name, response))
-                self.save_progress("Test connectivity passed")
+                self.save_progress("Test Connectivity Passed")
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
-                self.save_progress("Test connectivity failed")
+                self.save_progress("Test Connectivity Failed")
                 self.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
                 return self.get_status()
         else:
@@ -133,10 +133,10 @@ class DNSConnector(BaseConnector):
                 response = str(resolver.query(self._host_name, 'A')[0])
                 self.save_progress("Found a record for {0} as {1}...".format(
                     self._host_name, response))
-                self.save_progress("Test connectivity passed")
+                self.save_progress("Test Connectivity Passed")
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
-                self.save_progress("Test connectivity failed")
+                self.save_progress("Test Connectivity Failed")
                 self.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
                 return self.get_status()
 
