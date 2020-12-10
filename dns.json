@@ -19,6 +19,9 @@
     "python_version": "3",
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
+    "test_metadata": {
+      "playbook_names": ["phantom_dns"]
+    },
     "pip_dependencies": {
         "wheel": [
             {
