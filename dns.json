@@ -7,8 +7,8 @@
     "type": "information",
     "license": "Copyright (c) 2016-2020 Splunk Inc.",
     "main_module": "dns_connector.py",
-    "app_version": "2.0.16",
-    "utctime_updated": "2020-12-10T19:50:17.000000Z",
+    "app_version": "2.0.17",
+    "utctime_updated": "2020-12-10T23:34:52.000000Z",
     "product_vendor": "Generic",
     "product_name": "DNS",
     "product_version_regex": ".*",
@@ -20,7 +20,9 @@
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
     "test_metadata": {
-      "playbook_names": ["phantom_dns"]
+        "playbook_names": [
+            "phantom_dns"
+        ]
     },
     "pip_dependencies": {
         "wheel": [
