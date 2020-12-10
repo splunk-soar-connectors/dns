@@ -10,19 +10,20 @@ from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
 
 # Imports local to this App
+from bs4 import UnicodeDammit
 from dns_consts import *
 import dns.resolver as resolver  # noqa
 import dns.reversename as reversename  # noqa
 import ipaddress  # noqa
 import requests
 import json
+import sys
 
 from builtins import str
 
 
 # Define the App Class
 class DNSConnector(BaseConnector):
-
     ACTION_ID_FORWARD_LOOKUP = "forward_lookup"
     ACTION_ID_REVERSE_LOOKUP = "reverse_lookup"
 
@@ -34,24 +35,95 @@ class DNSConnector(BaseConnector):
     def initialize(self):
 
         config = self.get_config()
-        self._server = config.get('dns_server')
-        self._host_name = config.get('host_name', 'www.splunk.com')
+        try:
+            self._python_version = int(sys.version_info[0])
+        except:
+            return self.set_status(phantom.APP_ERROR, "Error occurred while getting the Phantom "
+                                                      "server's Python major version.")
+        self._server = self._handle_py_ver_compat_for_input_str(config.get('dns_server'))
+        self._host_name = self._handle_py_ver_compat_for_input_str(config.get('host_name', 'www.splunk.com'))
 
         return phantom.APP_SUCCESS
+
+    def _handle_py_ver_compat_for_input_str(self, input_str):
+
+        """
+        This method returns the encoded|original string based on the Python version.
+
+        :param input_str: Input string to be processed
+        :return: input_str (Processed input string based on following logic 'input_str - Python 3; encoded input_str -
+        Python 2')
+        """
+        try:
+            if input_str and self._python_version < 3:
+                input_str = UnicodeDammit(input_str).unicode_markup.encode('utf-8')
+        except:
+            self.debug_print("Error occurred while handling python 2to3 compatibility for the input string")
+
+        return input_str
+
+    def _get_error_message_from_exception(self, e):
+        """ This function is used to get appropriate error message from the exception.
+        :param e: Exception object
+        :return: error message
+        """
+        error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
+        error_code = "Error code unavailable"
+        try:
+            if e.args:
+                if len(e.args) > 1:
+                    error_code = e.args[0]
+                    error_msg = e.args[1]
+                elif len(e.args) == 1:
+                    error_code = "Error code unavailable"
+                    error_msg = e.args[0]
+            else:
+                error_code = "Error code unavailable"
+                error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
+        except:
+            error_code = "Error code unavailable"
+            error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
+        try:
+            error_msg = self._handle_py_ver_compat_for_input_str(error_msg)
+        except TypeError:
+            error_msg = "Error occurred while connecting to the DNS server. Please check the asset configuration and|or the action parameters."
+        except:
+            error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
+
+        return "Error Code: {0}. Error Message: {1}".format(error_code, error_msg)
+
+    def _is_ip(self, input_ip_address):
+
+        """
+        Function that checks given address and return True if address is valid IPv4 or IPV6 address.
+
+        :param input_ip_address: IP address
+        :return: status (success/failure)
+        """
+        ip_address_input = input_ip_address
+        try:
+            ipaddress.ip_address(UnicodeDammit(ip_address_input).unicode_markup)
+        except:
+            return False
+        return True
 
     def _test_connectivity(self):
         dnslookup = resolver.Resolver()
         if self._server:
-            dnslookup.nameservers = [self._server.encode("utf-8")]
-            self.save_progress(
-                "Checking connectivity to your defined lookup server ({0})...".format(str(dnslookup.nameservers[0])))
+            dnslookup.nameservers = [self._handle_py_ver_compat_for_input_str(self._server)]
+
+            if dnslookup.nameservers:
+                self.save_progress("Checking connectivity to your defined lookup server ({0})...".format
+                                   (dnslookup.nameservers[0]))
             try:
                 dnslookup.lifetime = 5
                 response = str(dnslookup.query(self._host_name, 'A')[0])
                 self.save_progress("Found a record for {0} as {1}...".format(
                     self._host_name, response))
+                self.save_progress("Test Connectivity Passed")
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
+                self.save_progress("Test Connectivity Failed")
                 self.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
                 return self.get_status()
         else:
@@ -61,8 +133,10 @@ class DNSConnector(BaseConnector):
                 response = str(resolver.query(self._host_name, 'A')[0])
                 self.save_progress("Found a record for {0} as {1}...".format(
                     self._host_name, response))
+                self.save_progress("Test Connectivity Passed")
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
+                self.save_progress("Test Connectivity Failed")
                 self.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
                 return self.get_status()
 
@@ -83,7 +157,7 @@ class DNSConnector(BaseConnector):
             dnslookup = resolver.Resolver()
             if (server):
                 dnslookup.nameservers = [server]
-            if not phantom.is_ip(host):
+            if not self._is_ip(host):
                 record_infos = []
                 dns_response = dnslookup.query(host, type)
                 for item in dns_response:
@@ -103,8 +177,9 @@ class DNSConnector(BaseConnector):
                     phantom.APP_ERROR, "Target is not a hostname")
                 return action_result.get_status()
         except Exception as e:
-            if ('None of DNS query names exist' in str(e)):
-                return action_result.set_status(phantom.APP_SUCCESS, str(e))
+            error_message = self._get_error_message_from_exception(e)
+            if ('None of DNS query names exist' in error_message):
+                return action_result.set_status(phantom.APP_SUCCESS, error_message)
             action_result.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
             return action_result.get_status()
         data = {'record_infos': record_infos}
@@ -122,13 +197,13 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = str(param['ip'])
+        host = param['ip']
 
         try:
             dnslookup = resolver.Resolver()
             if (server):
                 dnslookup.nameservers = [server]
-            if phantom.is_ip(host) or ipaddress.ip_address(host):  # changed module
+            if self._is_ip(host):  # changed module
                 response = dnslookup.query(
                     reversename.from_address(host), 'PTR')
                 dns_response = str(response[0])
@@ -142,8 +217,9 @@ class DNSConnector(BaseConnector):
                     phantom.APP_ERROR, "Target is not an IP")
                 return action_result.get_status()
         except Exception as e:
-            if ('does not exist' in str(e)):
-                return action_result.set_status(phantom.APP_SUCCESS, str(e))
+            error_message = self._get_error_message_from_exception(e)
+            if ('does not exist' in error_message):
+                return action_result.set_status(phantom.APP_SUCCESS, error_message)
             action_result.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
             return action_result.get_status()
 
@@ -190,9 +266,9 @@ if __name__ == '__main__':
     password = args.password
 
     if (username is not None and password is None):
-
         # User specified a username but not a password, so ask
         import getpass
+
         password = getpass.getpass("Password: ")
 
     if (username and password):

@@ -2,7 +2,7 @@
     "appid": "876ab991-313e-48e7-bccd-e8c9650c239c",
     "name": "DNS",
     "description": "This app implements investigative actions that return DNS Records for the object queried",
-    "publisher": "Phantom",
+    "publisher": "Splunk",
     "package_name": "phantom_dns",
     "type": "information",
     "license": "Copyright (c) 2016-2020 Splunk Inc.",
@@ -12,9 +12,9 @@
     "product_vendor": "Generic",
     "product_name": "DNS",
     "product_version_regex": ".*",
-    "min_phantom_version": "4.5.15922",
+    "min_phantom_version": "4.8.24304",
     "latest_tested_versions": [
-        "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 01/2020)"
+        "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 11/2020)"
     ],
     "python_version": "3",
     "logo": "logo_splunk.svg",
@@ -30,20 +30,11 @@
     "configuration": {
         "dns_server": {
             "description": "IP of the DNS server for lookups",
-            "data_type": "string",
-            "required": false,
-            "contains": [
-                "ip",
-                "ipv6"
-            ]
+            "data_type": "string"
         },
         "host_name": {
-            "description": "Host name to be used in test connectivity",
+            "description": "Hostname to be used in test connectivity",
             "data_type": "string",
-            "required": false,
-            "contains": [
-                "hostname"
-            ],
             "default": "www.splunk.com"
         }
     },
@@ -79,7 +70,6 @@
                 "type": {
                     "description": "DNS Record Type",
                     "data_type": "string",
-                    "required": false,
                     "value_list": [
                         "A",
                         "AAAA",
@@ -105,7 +95,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -116,9 +107,7 @@
                         "domain"
                     ],
                     "example_values": [
-                        "ffobaaar.com",
-                        "phantomcyber.com",
-                        "amazon.com"
+                        "test.com"
                     ]
                 },
                 {
@@ -132,14 +121,14 @@
                         "ip"
                     ],
                     "example_values": [
-                        "54.239.25.192"
+                        "122.122.122.122"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.record_infos",
                     "data_type": "string",
                     "example_values": [
-                        "54.239.26.128"
+                        "122.122.122.122"
                     ],
                     "contains": [
                         "ip"
@@ -149,8 +138,8 @@
                     "data_path": "action_result.summary.cannonical_name",
                     "data_type": "string",
                     "example_values": [
-                        "phantomcyber.com.",
-                        "amazon.com."
+                        "phantomtest.com.",
+                        "test.com."
                     ]
                 },
                 {
@@ -180,13 +169,13 @@
                         "ip"
                     ],
                     "example_values": [
-                        "54.239.25.192"
+                        "122.122.122.122"
                     ]
                 },
                 {
                     "data_path": "action_result.summary.total_record_infos",
                     "column_order": 0,
-                    "data_type": "string",
+                    "data_type": "numeric",
                     "example_values": [
                         1,
                         6
@@ -246,7 +235,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -256,22 +246,19 @@
                         "ip"
                     ],
                     "example_values": [
-                        "52.91.186.198",
+                        "122.122.122.122",
                         "123.123.123.123"
                     ]
                 },
                 {
                     "data_path": "action_result.data",
-                    "data_type": "string",
-                    "example_values": [
-                        "ec2-52-91-186-198.compute-1.amazonaws.com."
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.summary.cannonical_name",
                     "data_type": "string",
                     "example_values": [
-                        "198.186.91.52.in-addr.arpa."
+                        "122.122.122.122.in-addr.arpa."
                     ]
                 },
                 {
@@ -289,7 +276,7 @@
                         "domain"
                     ],
                     "example_values": [
-                        "ec2-52-91-186-198.compute-1.amazonaws.com."
+                        "ec2-52-91-186-198.compute-1.test.com."
                     ]
                 },
                 {
@@ -301,14 +288,14 @@
                         "ip"
                     ],
                     "example_values": [
-                        "52.91.186.198"
+                        "122.122.122.122"
                     ]
                 },
                 {
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Ip: 52.91.186.198\nHostname: ec2-52-91-186-198.compute-1.amazonaws.com.\nCannonical name: 198.186.91.52.in-addr.arpa.",
+                        "Ip: 122.122.122.122\nHostname: ec2-52-91-186-198.compute-1.test.com.\nCannonical name: 122.122.122.122.in-addr.arpa.",
                         "The DNS query name does not exist: 123.123.123.123.in-addr.arpa."
                     ]
                 },
