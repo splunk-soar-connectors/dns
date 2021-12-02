@@ -13,6 +13,7 @@
     "product_name": "DNS",
     "product_version_regex": ".*",
     "min_phantom_version": "4.8.24304",
+    "fips_compliant": true,
     "latest_tested_versions": [
         "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 11/2020)"
     ],
