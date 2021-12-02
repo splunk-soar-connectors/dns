@@ -1,4 +1,0 @@
-[submodule "dnspython"]
-	path = dnspython
-	url = git@cd.splunkdev.com:phantom-external/dnspython.git
-	ignore = dirty
