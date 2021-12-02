@@ -5,14 +5,14 @@
     "publisher": "Splunk",
     "package_name": "phantom_dns",
     "type": "information",
-    "license": "Copyright (c) 2016-2020 Splunk Inc.",
+    "license": "Copyright (c) 2016-2021 Splunk Inc.",
     "main_module": "dns_connector.py",
     "app_version": "2.0.21",
     "utctime_updated": "2020-12-18T01:27:14.000000Z",
     "product_vendor": "Generic",
     "product_name": "DNS",
     "product_version_regex": ".*",
-    "min_phantom_version": "4.8.24304",
+    "min_phantom_version": "5.0.0",
     "fips_compliant": true,
     "latest_tested_versions": [
         "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 11/2020)"
@@ -149,21 +149,12 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.summary.canonical_name",
-                    "column_order": 3,
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.summary.hostname",
-                    "column_name": "Hostname",
-                    "column_order": 2,
-                    "data_type": "string",
-                    "contains": [
-                        "host name",
-                        "domain"
-                    ],
+                    "data_path": "action_result.summary.total_record_infos",
+                    "column_order": 0,
+                    "data_type": "numeric",
                     "example_values": [
-                        "ffobaaar.com"
+                        1,
+                        6
                     ]
                 },
                 {
@@ -179,13 +170,22 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.summary.total_record_infos",
-                    "column_order": 0,
-                    "data_type": "numeric",
+                    "data_path": "action_result.summary.hostname",
+                    "column_name": "Hostname",
+                    "column_order": 2,
+                    "data_type": "string",
+                    "contains": [
+                        "host name",
+                        "domain"
+                    ],
                     "example_values": [
-                        1,
-                        6
+                        "ffobaaar.com"
                     ]
+                },
+                {
+                    "data_path": "action_result.summary.canonical_name",
+                    "column_order": 3,
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -268,9 +268,16 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.summary.canonical_name",
-                    "column_order": 2,
-                    "data_type": "string"
+                    "data_path": "action_result.summary.ip",
+                    "column_name": "IP Address",
+                    "column_order": 0,
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "122.122.122.122"
+                    ]
                 },
                 {
                     "data_path": "action_result.summary.hostname",
@@ -286,16 +293,9 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.summary.ip",
-                    "column_name": "IP Address",
-                    "column_order": 0,
-                    "data_type": "string",
-                    "contains": [
-                        "ip"
-                    ],
-                    "example_values": [
-                        "122.122.122.122"
-                    ]
+                    "data_path": "action_result.summary.canonical_name",
+                    "column_order": 2,
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
