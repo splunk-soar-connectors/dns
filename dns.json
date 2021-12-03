@@ -36,14 +36,12 @@
     "configuration": {
         "dns_server": {
             "description": "IP of the DNS server for lookups",
-            "data_type": "string",
-            "order": 0
+            "data_type": "string"
         },
         "host_name": {
             "description": "Hostname to be used in test connectivity",
             "data_type": "string",
-            "default": "www.splunk.com",
-            "order": 1
+            "default": "www.splunk.com"
         }
     },
     "actions": [
@@ -100,45 +98,6 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.summary.total_record_infos",
-                    "column_order": 0,
-                    "data_type": "numeric",
-                    "example_values": [
-                        1,
-                        6
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.record_info",
-                    "column_name": "IP Address",
-                    "column_order": 1,
-                    "data_type": "string",
-                    "contains": [
-                        "ip"
-                    ],
-                    "example_values": [
-                        "122.122.122.122"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.hostname",
-                    "column_name": "Hostname",
-                    "column_order": 2,
-                    "data_type": "string",
-                    "contains": [
-                        "host name",
-                        "domain"
-                    ],
-                    "example_values": [
-                        "ffobaaar.com"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.canonical_name",
-                    "column_order": 3,
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
@@ -187,6 +146,45 @@
                     "example_values": [
                         "phantomtest.com.",
                         "test.com."
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.canonical_name",
+                    "column_order": 3,
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.hostname",
+                    "column_name": "Hostname",
+                    "column_order": 2,
+                    "data_type": "string",
+                    "contains": [
+                        "host name",
+                        "domain"
+                    ],
+                    "example_values": [
+                        "ffobaaar.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.record_info",
+                    "column_name": "IP Address",
+                    "column_order": 1,
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "122.122.122.122"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_record_infos",
+                    "column_order": 0,
+                    "data_type": "numeric",
+                    "example_values": [
+                        1,
+                        6
                     ]
                 },
                 {
@@ -240,36 +238,6 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.summary.ip",
-                    "column_name": "IP Address",
-                    "column_order": 0,
-                    "data_type": "string",
-                    "contains": [
-                        "ip"
-                    ],
-                    "example_values": [
-                        "122.122.122.122"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.hostname",
-                    "column_name": "Hostname",
-                    "column_order": 1,
-                    "data_type": "string",
-                    "contains": [
-                        "host name",
-                        "domain"
-                    ],
-                    "example_values": [
-                        "ec2-52-91-186-198.compute-1.test.com."
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.canonical_name",
-                    "column_order": 2,
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
@@ -297,6 +265,36 @@
                     "data_type": "string",
                     "example_values": [
                         "122.122.122.122.in-addr.arpa."
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.canonical_name",
+                    "column_order": 2,
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.hostname",
+                    "column_name": "Hostname",
+                    "column_order": 1,
+                    "data_type": "string",
+                    "contains": [
+                        "host name",
+                        "domain"
+                    ],
+                    "example_values": [
+                        "ec2-52-91-186-198.compute-1.test.com."
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.ip",
+                    "column_name": "IP Address",
+                    "column_order": 0,
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "122.122.122.122"
                     ]
                 },
                 {
