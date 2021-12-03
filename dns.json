@@ -36,12 +36,14 @@
     "configuration": {
         "dns_server": {
             "description": "IP of the DNS server for lookups",
-            "data_type": "string"
+            "data_type": "string",
+            "order": 0
         },
         "host_name": {
             "description": "Hostname to be used in test connectivity",
             "data_type": "string",
-            "default": "www.splunk.com"
+            "default": "www.splunk.com",
+            "order": 1
         }
     },
     "actions": [
@@ -71,7 +73,8 @@
                         "domain"
                     ],
                     "primary": true,
-                    "required": true
+                    "required": true,
+                    "order": 0
                 },
                 "type": {
                     "description": "DNS Record Type",
@@ -86,7 +89,8 @@
                         "NS",
                         "SOA",
                         "TXT"
-                    ]
+                    ],
+                    "order": 1
                 }
             },
             "render": {
@@ -227,7 +231,8 @@
                         "ip"
                     ],
                     "primary": true,
-                    "required": true
+                    "required": true,
+                    "order": 0
                 }
             },
             "render": {
