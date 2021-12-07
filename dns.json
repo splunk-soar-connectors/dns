@@ -5,14 +5,15 @@
     "publisher": "Splunk",
     "package_name": "phantom_dns",
     "type": "information",
-    "license": "Copyright (c) 2016-2020 Splunk Inc.",
+    "license": "Copyright (c) 2016-2021 Splunk Inc.",
     "main_module": "dns_connector.py",
     "app_version": "2.0.21",
     "utctime_updated": "2020-12-18T01:27:14.000000Z",
     "product_vendor": "Generic",
     "product_name": "DNS",
     "product_version_regex": ".*",
-    "min_phantom_version": "4.8.24304",
+    "min_phantom_version": "5.0.0",
+    "fips_compliant": true,
     "latest_tested_versions": [
         "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 11/2020)"
     ],
@@ -35,12 +36,14 @@
     "configuration": {
         "dns_server": {
             "description": "IP of the DNS server for lookups",
-            "data_type": "string"
+            "data_type": "string",
+            "order": 0
         },
         "host_name": {
             "description": "Hostname to be used in test connectivity",
             "data_type": "string",
-            "default": "www.splunk.com"
+            "default": "www.splunk.com",
+            "order": 1
         }
     },
     "actions": [
@@ -70,7 +73,8 @@
                         "domain"
                     ],
                     "primary": true,
-                    "required": true
+                    "required": true,
+                    "order": 0
                 },
                 "type": {
                     "description": "DNS Record Type",
@@ -85,7 +89,8 @@
                         "NS",
                         "SOA",
                         "TXT"
-                    ]
+                    ],
+                    "order": 1
                 }
             },
             "render": {
@@ -226,7 +231,8 @@
                         "ip"
                     ],
                     "primary": true,
-                    "required": true
+                    "required": true,
+                    "order": 0
                 }
             },
             "render": {

@@ -1,6 +1,6 @@
 # File: dns_connector.py
 #
-# Copyright (c) 2016-2020 Splunk Inc.
+# Copyright (c) 2016-2021 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -159,10 +159,10 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = param['domain']
+        host = param.get('domain')
         type = 'A'
         if param.get('type'):
-            type = param['type']
+            type = param.get('type')
 
         try:
             dnslookup = resolver.Resolver()
@@ -208,7 +208,7 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = param['ip']
+        host = param.get('ip')
 
         try:
             dnslookup = resolver.Resolver()
