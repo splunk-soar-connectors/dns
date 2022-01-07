@@ -1,25 +1,35 @@
 # File: dns_connector.py
-# Copyright (c) 2016-2020 Splunk Inc.
 #
-# SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
-# without a valid written license from Splunk Inc. is PROHIBITED.
+# Copyright (c) 2016-2022 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
+#
 # Phantom App imports
-import phantom.app as phantom
-
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
-
-# Imports local to this App
-from bs4 import UnicodeDammit
-from dns_consts import *
-import dns.resolver as resolver  # noqa
-import dns.reversename as reversename  # noqa
 import ipaddress  # noqa
-import requests
 import json
 import sys
-
 from builtins import str
+
+import phantom.app as phantom
+import requests
+# Imports local to this App
+from bs4 import UnicodeDammit
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
+
+import dns.resolver as resolver  # noqa
+import dns.reversename as reversename  # noqa
+from dns_consts import *
 
 
 # Define the App Class
@@ -148,10 +158,10 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = param['domain']
+        host = param.get('domain')
         type = 'A'
         if param.get('type'):
-            type = param['type']
+            type = param.get('type')
 
         try:
             dnslookup = resolver.Resolver()
@@ -197,7 +207,7 @@ class DNSConnector(BaseConnector):
 
         # get the server
         server = self._server
-        host = param['ip']
+        host = param.get('ip')
 
         try:
             dnslookup = resolver.Resolver()
@@ -248,8 +258,9 @@ class DNSConnector(BaseConnector):
 
 if __name__ == '__main__':
 
-    import pudb
     import argparse
+
+    import pudb
 
     pudb.set_trace()
 
