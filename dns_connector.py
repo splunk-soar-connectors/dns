@@ -1,6 +1,6 @@
 # File: dns_connector.py
 #
-# Copyright (c) 2016-2021 Splunk Inc.
+# Copyright (c) 2016-2022 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,22 +15,21 @@
 #
 #
 # Phantom App imports
-import phantom.app as phantom
-
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
-
-# Imports local to this App
-from bs4 import UnicodeDammit
-from dns_consts import *
-import dns.resolver as resolver  # noqa
-import dns.reversename as reversename  # noqa
 import ipaddress  # noqa
-import requests
 import json
 import sys
-
 from builtins import str
+
+import phantom.app as phantom
+import requests
+# Imports local to this App
+from bs4 import UnicodeDammit
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
+
+import dns.resolver as resolver  # noqa
+import dns.reversename as reversename  # noqa
+from dns_consts import *
 
 
 # Define the App Class
@@ -259,8 +258,9 @@ class DNSConnector(BaseConnector):
 
 if __name__ == '__main__':
 
-    import pudb
     import argparse
+
+    import pudb
 
     pudb.set_trace()
 
