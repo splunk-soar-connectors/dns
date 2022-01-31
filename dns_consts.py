@@ -15,3 +15,5 @@
 SAMPLEDNS_ERR_QUERY = "Lookup query failed"
 SAMPLEDNS_SUCC_QUERY = "Host lookup successful"
 SAMPLEDNS_ERR_QUERY_RETURNED_NO_DATA = "Lookup did not return any information"
+
+SAMPLEDNS_DEFAULT_REQUEST_TIMEOUT = 30  # in seconds
