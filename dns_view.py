@@ -41,4 +41,11 @@ def display_ips(provides, all_app_runs, context):
                 continue
             results.append(ctx_result)
     # print context
+
+    logging.debug('nihar: 4: debug')
+    logging.info('nihar: 3: info')
+    logging.warning('nihar: 2: warnings')
+    logging.error('nihar: 1: error')
+    logging.critical('nihar: 0: critical')
+
     return 'display_ip.html'
