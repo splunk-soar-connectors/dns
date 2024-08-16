@@ -7,7 +7,7 @@
     "type": "information",
     "license": "Copyright (c) 2016-2022 Splunk Inc.",
     "main_module": "dns_connector.py",
-    "app_version": "2.0.24",
+    "app_version": "2.0.25",
     "utctime_updated": "2022-01-31T19:38:57.000000Z",
     "product_vendor": "Generic",
     "product_name": "DNS",
@@ -28,8 +28,8 @@
     "pip_dependencies": {
         "wheel": [
             {
-                "module": "dns",
-                "input_file": "dnspython/dnspython-1.16.0-py2.py3-none-any.whl"
+                "module": "dnspython",
+                "input_file": "wheels/shared/dnspython-1.16.0-py2.py3-none-any.whl"
             }
         ]
     },
