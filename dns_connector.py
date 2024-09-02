@@ -1,6 +1,6 @@
 # File: dns_connector.py
 #
-# Copyright (c) 2016-2022 Splunk Inc.
+# Copyright (c) 2016-2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -156,6 +156,8 @@ class DNSConnector(BaseConnector):
         action_result = ActionResult(dict(param))
         self.add_action_result(action_result)
 
+        self.save_progress(EXECUTION_START_MESSAGE.format(self.ACTION_ID_FORWARD_LOOKUP))
+
         # get the server
         server = self._server
         host = param.get('domain')
@@ -204,6 +206,8 @@ class DNSConnector(BaseConnector):
         # Add an action result to the Connector Run
         action_result = ActionResult(dict(param))
         self.add_action_result(action_result)
+
+        self.save_progress(EXECUTION_START_MESSAGE.format(self.ACTION_ID_REVERSE_LOOKUP))
 
         # get the server
         server = self._server
