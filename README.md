@@ -2,16 +2,16 @@
 # DNS
 
 Publisher: Splunk  
-Connector Version: 2\.0\.23  
+Connector Version: 2.0.25  
 Product Vendor: Generic  
 Product Name: DNS  
-Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.0\.0  
+Product Version Supported (regex): ".\*"  
+Minimum Product Version: 5.1.0  
 
 This app implements investigative actions that return DNS Records for the object queried
 
-[comment]: # " File: readme.md"
-[comment]: # "  Copyright (c) 2016-2022 Splunk Inc."
+[comment]: # " File: README.md"
+[comment]: # "  Copyright (c) 2016-2024 Splunk Inc."
 [comment]: # ""
 [comment]: # "Licensed under the Apache License, Version 2.0 (the 'License');"
 [comment]: # "you may not use this file except in compliance with the License."
@@ -34,8 +34,8 @@ The below configuration variables are required for this Connector to operate.  T
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
-**dns\_server** |  optional  | string | IP of the DNS server for lookups
-**host\_name** |  optional  | string | Hostname to be used in test connectivity
+**dns_server** |  optional  | string | IP of the DNS server for lookups
+**host_name** |  optional  | string | Hostname to be used in test connectivity
 
 ### Supported Actions  
 [test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity  
@@ -60,7 +60,7 @@ Query DNS records for a Domain or Host Name
 Type: **investigate**  
 Read only: **True**
 
-A list of record <b>types</b> to be resolved is supplied, one of which the user may choose as the value for the <b>type</b> parameter, these are\:<br><ul><li>A</li><li>AAAA</li><li>CNAME</li><li>HINFO</li><li>ISDN</li><li>MX</li><li>NS</li><li>SOA</li><li>TXT</li></ul>When taking a lookup domain action from a Playbook, the author can look up arbitrary DNS record types by supplying the desired record type as a string for the <b>type</b> parameter\.
+A list of record <b>types</b> to be resolved is supplied, one of which the user may choose as the value for the <b>type</b> parameter, these are:<br><ul><li>A</li><li>AAAA</li><li>CNAME</li><li>HINFO</li><li>ISDN</li><li>MX</li><li>NS</li><li>SOA</li><li>TXT</li></ul>When taking a lookup domain action from a Playbook, the author can look up arbitrary DNS record types by supplying the desired record type as a string for the <b>type</b> parameter.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
@@ -69,21 +69,21 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **type** |  optional  | DNS Record Type | string | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.domain | string |  `host name`  `domain` 
-action\_result\.parameter\.type | string | 
-action\_result\.data\.\*\.record\_info\_objects\.\*\.record\_info | string |  `ip` 
-action\_result\.data\.\*\.record\_infos | string |  `ip` 
-action\_result\.summary\.cannonical\_name | string | 
-action\_result\.summary\.canonical\_name | string | 
-action\_result\.summary\.hostname | string |  `host name`  `domain` 
-action\_result\.summary\.record\_info | string |  `ip` 
-action\_result\.summary\.total\_record\_infos | numeric | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.domain | string |  `host name`  `domain`  |   test.com 
+action_result.parameter.type | string |  |  
+action_result.data.\*.record_info_objects.\*.record_info | string |  `ip`  |   122.122.122.122 
+action_result.data.\*.record_infos | string |  `ip`  |   122.122.122.122 
+action_result.summary.cannonical_name | string |  |   phantomtest.com.  test.com. 
+action_result.summary.canonical_name | string |  |  
+action_result.summary.hostname | string |  `host name`  `domain`  |   ffobaaar.com 
+action_result.summary.record_info | string |  `ip`  |   122.122.122.122 
+action_result.summary.total_record_infos | numeric |  |   1  6 
+action_result.message | string |  |   None of DNS query names exist: ['ffobaaar.com.', 'ffobaaar.com.localdomain.']  Record info: 54.239.25.192, Total record infos: 6, Cannonical name: amazon.com. 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'lookup ip'
 Query Reverse DNS records for an IP
@@ -91,7 +91,7 @@ Query Reverse DNS records for an IP
 Type: **investigate**  
 Read only: **True**
 
-The <b>lookup ip</b> action takes an IP address parameter\. The IP address \(IPv4 or IPv6\) will be looked up against the appropriate reverse lookup DNS records, and any associate hostname\(s\) will be returned\. Only <b>PTR</b> type lookups are returned\.
+The <b>lookup ip</b> action takes an IP address parameter. The IP address (IPv4 or IPv6) will be looked up against the appropriate reverse lookup DNS records, and any associate hostname(s) will be returned. Only <b>PTR</b> type lookups are returned.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
@@ -99,15 +99,17 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **ip** |  required  | IP to resolve | string |  `ip` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.ip | string |  `ip` 
-action\_result\.data | string | 
-action\_result\.summary\.cannonical\_name | string | 
-action\_result\.summary\.canonical\_name | string | 
-action\_result\.summary\.hostname | string |  `host name`  `domain` 
-action\_result\.summary\.ip | string |  `ip` 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric | 
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.ip | string |  `ip`  |   122.122.122.122  123.123.123.123 
+action_result.data | string |  |  
+action_result.summary.cannonical_name | string |  |   122.122.122.122.in-addr.arpa. 
+action_result.summary.canonical_name | string |  |  
+action_result.summary.hostname | string |  `host name`  `domain`  |   ec2-52-91-186-198.compute-1.test.com. 
+action_result.summary.ip | string |  `ip`  |   122.122.122.122 
+action_result.message | string |  |   Ip: 122.122.122.122
+Hostname: ec2-52-91-186-198.compute-1.test.com.
+Cannonical name: 122.122.122.122.in-addr.arpa.  The DNS query name does not exist: 123.123.123.123.in-addr.arpa. 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1 

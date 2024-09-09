@@ -10,7 +10,7 @@
 {% block widget_content %} <!-- Main Start Block -->
 
 <!-- File: display_ip.html
-  Copyright (c) 2016-2022 Splunk Inc.
+  Copyright (c) 2016-2024 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ and limitations under the License.
       {% if result.data.record_infos %}
       <table class="wf-table-horizontal">
         {% if result.param.type == 'A' or result.param.type == 'AAAA' %}
-          <tr><th>IP</th></tr>  
+          <tr><th>IP</th></tr>
         {% else %}
           <tr><th>Record Info</th></tr>
         {% endif %}
@@ -145,4 +145,3 @@ and limitations under the License.
 </div> <!-- Main Div -->
 
 {% endblock %} <!-- Main Start Block -->
-
