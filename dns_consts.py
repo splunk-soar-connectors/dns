@@ -1,6 +1,6 @@
 # File: dns_consts.py
 #
-# Copyright (c) 2016-2022 Splunk Inc.
+# Copyright (c) 2016-2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,5 +15,7 @@
 SAMPLEDNS_ERR_QUERY = "Lookup query failed"
 SAMPLEDNS_SUCC_QUERY = "Host lookup successful"
 SAMPLEDNS_ERR_QUERY_RETURNED_NO_DATA = "Lookup did not return any information"
+
+EXECUTION_START_MESSAGE = "Executing {0} action"
 
 SAMPLEDNS_DEFAULT_REQUEST_TIMEOUT = 30  # in seconds
