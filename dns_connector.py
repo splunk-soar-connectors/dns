@@ -22,7 +22,6 @@ from builtins import str
 
 import phantom.app as phantom
 import requests
-
 # Imports local to this App
 from bs4 import UnicodeDammit
 from phantom.action_result import ActionResult
