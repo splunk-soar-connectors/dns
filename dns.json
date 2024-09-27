@@ -25,14 +25,6 @@
             "phantom_dns"
         ]
     },
-    "pip_dependencies": {
-        "wheel": [
-            {
-                "module": "dnspython",
-                "input_file": "wheels/shared/dnspython-1.16.0-py2.py3-none-any.whl"
-            }
-        ]
-    },
     "configuration": {
         "dns_server": {
             "description": "IP of the DNS server for lookups",
