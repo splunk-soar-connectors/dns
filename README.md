@@ -6,7 +6,7 @@ Connector Version: 2.0.25
 Product Vendor: Generic  
 Product Name: DNS  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 5.1.0  
+Minimum Product Version: 6.2.1  
 
 This app implements investigative actions that return DNS Records for the object queried
 
