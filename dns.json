@@ -12,7 +12,7 @@
     "product_vendor": "Generic",
     "product_name": "DNS",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.1.0",
+    "min_phantom_version": "6.2.1",
     "fips_compliant": true,
     "latest_tested_versions": [
         "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 11/2020)"
@@ -23,14 +23,6 @@
     "test_metadata": {
         "playbook_names": [
             "phantom_dns"
-        ]
-    },
-    "pip_dependencies": {
-        "wheel": [
-            {
-                "module": "dnspython",
-                "input_file": "wheels/shared/dnspython-1.16.0-py2.py3-none-any.whl"
-            }
         ]
     },
     "configuration": {
@@ -327,5 +319,13 @@
             ],
             "versions": "EQ(*)"
         }
-    ]
+    ],
+    "pip_dependencies": {
+        "wheel": [
+            {
+                "module": "dnspython",
+                "input_file": "wheels/shared/dnspython-1.16.0-py2.py3-none-any.whl"
+            }
+        ]
+    }
 }
