@@ -2,11 +2,11 @@
 # DNS
 
 Publisher: Splunk  
-Connector Version: 2.0.25  
+Connector Version: 2.0.26  
 Product Vendor: Generic  
 Product Name: DNS  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.2.1  
+Minimum Product Version: 6.2.2  
 
 This app implements investigative actions that return DNS Records for the object queried
 
