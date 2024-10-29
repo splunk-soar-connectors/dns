@@ -1,3 +1,3 @@
 **Unreleased**
 
-Linting fixes and dependencies update PSAAS-19223
+* Update dnspython library due to vulnerability [PAPP-34898]
