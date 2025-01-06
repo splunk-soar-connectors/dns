@@ -40,5 +40,5 @@ def display_ips(provides, all_app_runs, context):
             if not ctx_result:
                 continue
             results.append(ctx_result)
-    # print  context
+    # print context
     return "display_ip.html"
