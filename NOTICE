@@ -4,7 +4,7 @@ Copyright (c) 2016-2024 Splunk Inc.
 Third-party Software Attributions:
 
 Library: dnspython
-Version: 1.16.0
+Version: 2.6.1
 License: ISC
 Copyright 2001-2017 Nominum, Inc
 Copyright Dnspython Contributors

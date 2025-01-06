@@ -2,11 +2,11 @@
 # DNS
 
 Publisher: Splunk  
-Connector Version: 2.0.25  
+Connector Version: 2.0.27  
 Product Vendor: Generic  
 Product Name: DNS  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 5.1.0  
+Minimum Product Version: 6.3.0  
 
 This app implements investigative actions that return DNS Records for the object queried
 
@@ -29,8 +29,8 @@ Users can specify a name and record type in a "lookup domain" action, or an IP a
 ip" action. IPv4 and IPv6 addresses are both supported.
 
 
-### Configuration Variables
-The below configuration variables are required for this Connector to operate.  These variables are specified when configuring a DNS asset in SOAR.
+### Configuration variables
+This table lists the configuration variables required to operate DNS. These variables are specified when configuring a DNS asset in Splunk SOAR.
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
