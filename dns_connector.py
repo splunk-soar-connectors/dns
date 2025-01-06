@@ -17,7 +17,7 @@
 # Phantom App imports
 import ipaddress  # noqa
 import json
-import sys  # noqa
+import sys
 from builtins import str
 
 import phantom.app as phantom
