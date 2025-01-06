@@ -5,14 +5,14 @@
     "publisher": "Splunk",
     "package_name": "phantom_dns",
     "type": "information",
-    "license": "Copyright (c) 2016-2024 Splunk Inc.",
+    "license": "Copyright (c) 2016-2025 Splunk Inc.",
     "main_module": "dns_connector.py",
     "app_version": "2.0.26",
     "utctime_updated": "2024-09-30T11:04:48.000000Z",
     "product_vendor": "Generic",
     "product_name": "DNS",
     "product_version_regex": ".*",
-    "min_phantom_version": "6.2.1",
+    "min_phantom_version": "6.3.0",
     "fips_compliant": true,
     "latest_tested_versions": [
         "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 11/2020)"
@@ -320,11 +320,11 @@
             "versions": "EQ(*)"
         }
     ],
-    "pip_dependencies": {
+    "pip39_dependencies": {
         "wheel": [
             {
                 "module": "dnspython",
-                "input_file": "wheels/shared/dnspython-1.16.0-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/dnspython-2.6.1-py3-none-any.whl"
             }
         ]
     }
