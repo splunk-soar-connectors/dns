@@ -2,7 +2,7 @@
 # DNS
 
 Publisher: Splunk  
-Connector Version: 2.0.26  
+Connector Version: 2.0.27  
 Product Vendor: Generic  
 Product Name: DNS  
 Product Version Supported (regex): ".\*"  
