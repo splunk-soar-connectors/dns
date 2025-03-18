@@ -15,10 +15,9 @@
 #
 #
 # Phantom App imports
-import ipaddress  # noqa
+import ipaddress
 import json
 import sys
-from builtins import str
 
 import phantom.app as phantom
 import requests
@@ -26,8 +25,8 @@ from bs4 import UnicodeDammit
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
-import dns.resolver as resolver  # noqa
-import dns.reversename as reversename  # noqa
+import dns.resolver as resolver
+import dns.reversename as reversename
 from dns_consts import *
 
 
@@ -41,12 +40,11 @@ class DNSConnector(BaseConnector):
         return phantom.APP_SUCCESS
 
     def initialize(self):
-
         config = self.get_config()
         try:
             self._python_version = int(sys.version_info[0])
         except:
-            return self.set_status(phantom.APP_ERROR, "Error occurred while getting the Phantom " "server's Python major version.")
+            return self.set_status(phantom.APP_ERROR, "Error occurred while getting the Phantom server's Python major version.")
         self._server = self._handle_py_ver_compat_for_input_str(config.get("dns_server"))
         self._host_name = self._handle_py_ver_compat_for_input_str(config.get("host_name", "www.splunk.com"))
 
@@ -96,7 +94,7 @@ class DNSConnector(BaseConnector):
         except:
             error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
 
-        return "Error Code: {0}. Error Message: {1}".format(error_code, error_msg)
+        return f"Error Code: {error_code}. Error Message: {error_msg}"
 
     def _is_ip(self, input_ip_address):
         """
@@ -118,11 +116,11 @@ class DNSConnector(BaseConnector):
             dnslookup.nameservers = [self._handle_py_ver_compat_for_input_str(self._server)]
 
             if dnslookup.nameservers:
-                self.save_progress("Checking connectivity to your defined lookup server ({0})...".format(dnslookup.nameservers[0]))
+                self.save_progress(f"Checking connectivity to your defined lookup server ({dnslookup.nameservers[0]})...")
             try:
                 dnslookup.lifetime = 5
                 response = str(dnslookup.query(self._host_name, "A")[0])
-                self.save_progress("Found a record for {0} as {1}...".format(self._host_name, response))
+                self.save_progress(f"Found a record for {self._host_name} as {response}...")
                 self.save_progress("Test Connectivity Passed")
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
@@ -130,10 +128,10 @@ class DNSConnector(BaseConnector):
                 self.set_status(phantom.APP_ERROR, SAMPLEDNS_ERR_QUERY, e)
                 return self.get_status()
         else:
-            self.save_progress("Using OS level lookup server ({0})...".format(dnslookup.nameservers[0]))
+            self.save_progress(f"Using OS level lookup server ({dnslookup.nameservers[0]})...")
             try:
                 response = str(resolver.query(self._host_name, "A")[0])
-                self.save_progress("Found a record for {0} as {1}...".format(self._host_name, response))
+                self.save_progress(f"Found a record for {self._host_name} as {response}...")
                 self.save_progress("Test Connectivity Passed")
                 return self.set_status_save_progress(phantom.APP_SUCCESS, "Connectivity to dns server was successful.")
             except Exception as e:
@@ -142,7 +140,6 @@ class DNSConnector(BaseConnector):
                 return self.get_status()
 
     def _handle_forward_lookup(self, param):
-
         # Add an action result to the Connector Run
         action_result = ActionResult(dict(param))
         self.add_action_result(action_result)
@@ -189,7 +186,6 @@ class DNSConnector(BaseConnector):
         return action_result.get_status()
 
     def _handle_reverse_lookup(self, param):
-
         # Add an action result to the Connector Run
         action_result = ActionResult(dict(param))
         self.add_action_result(action_result)
@@ -226,7 +222,6 @@ class DNSConnector(BaseConnector):
         return action_result.get_status()
 
     def handle_action(self, param):
-
         ret_val = phantom.APP_SUCCESS
 
         # Get the action that we are supposed to execute for this connector run
@@ -245,7 +240,6 @@ class DNSConnector(BaseConnector):
 
 
 if __name__ == "__main__":
-
     import argparse
 
     import pudb

@@ -13,7 +13,6 @@
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
 def get_ctx_result(result):
-
     ctx_result = {}
     param = result.get_param()
     summary = result.get_summary()
@@ -31,11 +30,9 @@ def get_ctx_result(result):
 
 
 def display_ips(provides, all_app_runs, context):
-
     context["results"] = results = []
     for summary, action_results in all_app_runs:
         for result in action_results:
-
             ctx_result = get_ctx_result(result)
             if not ctx_result:
                 continue
