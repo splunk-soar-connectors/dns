@@ -1,15 +1,16 @@
 {% extends 'widgets/widget_template.html' %}
 {% load custom_template %}
-
-{% block custom_title_prop %}{% if title_logo %}style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"{% endif %}{% endblock %}
+{% block custom_title_prop %}
+  {% if title_logo %}
+    style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"
+  {% endif %}
+{% endblock %}
 {% block title1 %}{{ title1 }}{% endblock %}
 {% block title2 %}{{ title2 }}{% endblock %}
-{% block custom_tools %}
-{% endblock %}
-
-{% block widget_content %} <!-- Main Start Block -->
-
-<!-- File: display_ip.html
+{% block custom_tools %}{% endblock %}
+{% block widget_content %}
+  <!-- Main Start Block -->
+  <!-- File: display_ip.html
   Copyright (c) 2016-2025 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,10 +24,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
 either express or implied. See the License for the specific language governing permissions
 and limitations under the License.
 -->
-
-<style>
-
-
+  <style>
 .dns-display-ip a:hover {
   text-decoration:underline;
 }
@@ -77,71 +75,82 @@ and limitations under the License.
   font-size : 12px
 }
 
-</style>
-<div class="dns-display-ip" style="overflow: auto; width: 100%; height: 100%; padding-left:10px; padding-right:10px"> <!-- Main Div -->
-  {% for result in results %} <!-- loop for each result -->
-<br>
-
-<!------------------- For each Result ---------------------->
-
-<h3 class="wf-h3-style">Info</h3>
-<table class="wf-table-vertical">
-{% if result.param.domain %}
-<tr>
-  <td><b>Domain</b></td>
-  <td>
-    <a href="javascript:;" onclick="context_menu(this, [{'contains': ['domain'], 'value': '{{ result.param.domain|escapejs }}' }], 0, {{ container.id }}, null, false);">
-    {{ result.param.domain }}
-    &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
-    </a>
-  </td>
-</tr>
-<tr>
-  <td><b>Type</b></td>
-  <td>
-    {{ result.param.type }}
-  </td>
-</tr>
-{% endif %}
-</table>
-
-<br>
-
-    <!-- IPs -->
-      {% if result.data.record_infos %}
-      <table class="wf-table-horizontal">
-        {% if result.param.type == 'A' or result.param.type == 'AAAA' %}
-          <tr><th>IP</th></tr>
-        {% else %}
-          <tr><th>Record Info</th></tr>
-        {% endif %}
-        {% if result.param.type == 'A' or result.param.type == 'AAAA' %}
-          {% for record_info in result.data.record_infos %}
+  </style>
+  <div class="dns-display-ip"
+       style="overflow: auto;
+              width: 100%;
+              height: 100%;
+              padding-left:10px;
+              padding-right:10px">
+    <!-- Main Div -->
+    {% for result in results %}
+      <!-- loop for each result -->
+      <br>
+      <!------------------- For each Result ---------------------->
+      <h3 class="wf-h3-style">Info</h3>
+      <table class="wf-table-vertical">
+        {% if result.param.domain %}
           <tr>
-            <td><a href="javascript:;" onclick="context_menu(this, [{'contains': ['ip', 'ipv6'], 'value': '{{ record_info|escapejs }}' }], 0, {{ container.id }}, null, false);">
-                {{ record_info }}
+            <td>
+              <b>Domain</b>
+            </td>
+            <td>
+              <a href="javascript:;"
+                 onclick="context_menu(this, [{'contains': ['domain'], 'value': '{{ result.param.domain|escapejs }}' }], 0, {{ container.id }}, null, false);">
+                {{ result.param.domain }}
                 &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
-            </a></td>
+              </a>
+            </td>
           </tr>
-          {% endfor %}
-        {% else %}
-          {% for record_info in result.data.record_infos %}
-            <tr>
-              <td>{{ record_info }}</td>
-            </tr>
-          {% endfor %}
+          <tr>
+            <td>
+              <b>Type</b>
+            </td>
+            <td>{{ result.param.type }}</td>
+          </tr>
         {% endif %}
-
       </table>
       <br>
+      <!-- IPs -->
+      {% if result.data.record_infos %}
+        <table class="wf-table-horizontal">
+          {% if result.param.type == 'A' or result.param.type == 'AAAA' %}
+            <tr>
+              <th>IP</th>
+            </tr>
+          {% else %}
+            <tr>
+              <th>Record Info</th>
+            </tr>
+          {% endif %}
+          {% if result.param.type == 'A' or result.param.type == 'AAAA' %}
+            {% for record_info in result.data.record_infos %}
+              <tr>
+                <td>
+                  <a href="javascript:;"
+                     onclick="context_menu(this, [{'contains': ['ip', 'ipv6'], 'value': '{{ record_info|escapejs }}' }], 0, {{ container.id }}, null, false);">
+                    {{ record_info }}
+                    &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            {% for record_info in result.data.record_infos %}
+              <tr>
+                <td>{{ record_info }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        </table>
+        <br>
       {% else %}
-      <p> No Record Info in results </p>
+        <p>No Record Info in results</p>
       {% endif %}
-
-
-<!------------------- For each Result END ---------------------->
-
-{% endfor %} <!-- loop for each result end -->
-</div> <!-- Main Div -->
-
-{% endblock %} <!-- Main Start Block -->
+      <!------------------- For each Result END ---------------------->
+    {% endfor %}
+    <!-- loop for each result end -->
+  </div>
+  <!-- Main Div -->
+{% endblock %}
+<!-- Main Start Block -->
