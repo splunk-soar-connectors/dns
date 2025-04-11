@@ -19,14 +19,14 @@ import ipaddress
 import json
 import sys
 
+import dns.resolver as resolver
+import dns.reversename as reversename
 import phantom.app as phantom
 import requests
 from bs4 import UnicodeDammit
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
-import dns.resolver as resolver
-import dns.reversename as reversename
 from dns_consts import *
 
 
