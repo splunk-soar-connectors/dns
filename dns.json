@@ -324,7 +324,7 @@
         "wheel": [
             {
                 "module": "dnspython",
-                "input_file": "wheels/py3/dnspython-2.6.1-py3-none-any.whl"
+                "input_file": "wheels/py3/dnspython-2.7.0-py3-none-any.whl"
             }
         ]
     }
