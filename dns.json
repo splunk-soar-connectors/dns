@@ -17,7 +17,7 @@
     "latest_tested_versions": [
         "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 11/2020)"
     ],
-    "python_version": "3",
+    "python_version": ["3.9", "3.13"],
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
     "test_metadata": {
