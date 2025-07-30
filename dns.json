@@ -7,8 +7,8 @@
     "type": "information",
     "license": "Copyright (c) 2016-2025 Splunk Inc.",
     "main_module": "dns_connector.py",
-    "app_version": "2.0.29",
-    "utctime_updated": "2025-07-10T12:04:27.575004Z",
+    "app_version": "2.0.30",
+    "utctime_updated": "2025-07-30T17:44:47.876567Z",
     "product_vendor": "Generic",
     "product_name": "DNS",
     "product_version_regex": ".*",
@@ -17,7 +17,10 @@
     "latest_tested_versions": [
         "N/A (Note: tested using Google Public DNS server 8.8.8.8 as of 11/2020)"
     ],
-    "python_version": ["3.9", "3.13"],
+    "python_version": [
+        "3.9",
+        "3.13"
+    ],
     "logo": "logo_splunk.svg",
     "logo_dark": "logo_splunk_dark.svg",
     "test_metadata": {
