@@ -330,5 +330,13 @@
                 "input_file": "wheels/py3/dnspython-2.7.0-py3-none-any.whl"
             }
         ]
+    },
+    "pip313_dependencies": {
+        "wheel": [
+            {
+                "module": "dnspython",
+                "input_file": "wheels/py3/dnspython-2.7.0-py3-none-any.whl"
+            }
+        ]
     }
 }
