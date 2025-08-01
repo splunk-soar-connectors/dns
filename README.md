@@ -1,9 +1,9 @@
 # DNS
 
-Publisher: Splunk \
-Connector Version: 2.0.30 \
-Product Vendor: Generic \
-Product Name: DNS \
+Publisher: Splunk <br>
+Connector Version: 2.0.30 <br>
+Product Vendor: Generic <br>
+Product Name: DNS <br>
 Minimum Product Version: 6.3.0
 
 This app implements investigative actions that return DNS Records for the object queried
@@ -23,15 +23,15 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity \
-[lookup domain](#action-lookup-domain) - Query DNS records for a Domain or Host Name \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity <br>
+[lookup domain](#action-lookup-domain) - Query DNS records for a Domain or Host Name <br>
 [lookup ip](#action-lookup-ip) - Query Reverse DNS records for an IP
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -46,7 +46,7 @@ No Output
 
 Query DNS records for a Domain or Host Name
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 A list of record <b>types</b> to be resolved is supplied, one of which the user may choose as the value for the <b>type</b> parameter, these are:<br><ul><li>A</li><li>AAAA</li><li>CNAME</li><li>HINFO</li><li>ISDN</li><li>MX</li><li>NS</li><li>SOA</li><li>TXT</li></ul>When taking a lookup domain action from a Playbook, the author can look up arbitrary DNS record types by supplying the desired record type as a string for the <b>type</b> parameter.
@@ -80,7 +80,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Query Reverse DNS records for an IP
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 The <b>lookup ip</b> action takes an IP address parameter. The IP address (IPv4 or IPv6) will be looked up against the appropriate reverse lookup DNS records, and any associate hostname(s) will be returned. Only <b>PTR</b> type lookups are returned.
