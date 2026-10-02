@@ -14,7 +14,13 @@
 """Reverse DNS lookup action."""
 
 from soar_sdk.abstract import SOARClient
-from soar_sdk.action_results import ActionOutput, OutputField, PermissiveActionOutput
+from soar_sdk.action_results import (
+    ActionOutput,
+    ActionResult,
+    OutputField,
+    OutputFieldSpecification,
+    PermissiveActionOutput,
+)
 from soar_sdk.params import Param, Params
 
 from ..consts import LOOKUP_QUERY_ERROR, TARGET_NOT_IP
@@ -30,9 +36,18 @@ class LookupIpParams(Params):
 
 
 class LookupIpOutput(PermissiveActionOutput):
-    """Reverse lookup data with explicit values for the legacy data path and table."""
+    """Reverse lookup output schema retaining the legacy scalar data path."""
 
     data: str | None = OutputField(example_values=["dns.google."])
+
+    @classmethod
+    def _to_json_schema(
+        cls, parent_datapath: str = "action_result.data.*", column_order_counter=None
+    ):
+        """Map the scalar legacy payload to its original root datapath."""
+        yield OutputFieldSpecification(
+            data_path="action_result.data", data_type="string"
+        )
 
 
 class LookupIpSummary(ActionOutput):
@@ -52,7 +67,7 @@ def lookup_ip(params: LookupIpParams, soar: SOARClient, asset) -> LookupIpOutput
 
     ip = params.ip
     if not is_ip_address(ip):
-        raise ValueError(TARGET_NOT_IP)
+        return ActionResult(False, TARGET_NOT_IP, params.model_dump())
 
     resolver = create_resolver(asset.dns_server)
     try:
@@ -60,21 +75,26 @@ def lookup_ip(params: LookupIpParams, soar: SOARClient, asset) -> LookupIpOutput
     except Exception as exc:
         message = error_message(exc)
         if "does not exist" in message:
-            soar.set_message(message)
-            return LookupIpOutput(data=None)
-        raise RuntimeError(f"{LOOKUP_QUERY_ERROR}. Error string: '{exc}'") from exc
+            return ActionResult(True, message, params.model_dump())
+        return ActionResult(
+            False,
+            f"{LOOKUP_QUERY_ERROR}. Error string: '{exc}'",
+            params.model_dump(),
+        )
 
     hostname = str(answer[0]) if answer else None
     canonical_name = str(answer.canonical_name)
-    soar.set_summary(
-        LookupIpSummary(
-            ip=ip,
-            hostname=hostname,
-            cannonical_name=canonical_name,
-            canonical_name=None,
-        )
+    summary = LookupIpSummary(
+        ip=ip,
+        hostname=hostname,
+        cannonical_name=canonical_name,
+        canonical_name=None,
     )
-    soar.set_message(
-        f"Ip: {ip}\nHostname: {hostname}\nCannonical name: {canonical_name}"
+    result = ActionResult(
+        True,
+        f"Ip: {ip}\nHostname: {hostname}\nCannonical name: {canonical_name}",
+        params.model_dump(),
     )
-    return LookupIpOutput(data=hostname)
+    result.add_data(hostname)
+    result.set_summary(summary.model_dump(by_alias=True))
+    return result

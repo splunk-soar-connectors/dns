@@ -17,7 +17,7 @@ from types import SimpleNamespace
 
 from src.actions import lookup_domain as forward_module
 from src.actions.lookup_domain import LookupDomainParams, lookup_domain
-from src.actions.lookup_ip import LookupIpParams, lookup_ip
+from src.actions.lookup_ip import LookupIpOutput, LookupIpParams, lookup_ip
 
 
 class FakeSOAR:
@@ -121,13 +121,18 @@ def test_reverse_lookup_serializes_aliases_and_null_defaults(monkeypatch):
         LookupIpParams(ip="192.0.2.1"), soar, SimpleNamespace(dns_server=None)
     )
 
-    assert result.model_dump() == {"data": "host.example."}
-    assert soar.summary.model_dump(by_alias=True) == {
+    assert result.get_status() is True
+    assert result.get_param() == {"ip": "192.0.2.1"}
+    assert result.get_data() == ["host.example."]
+    assert result.get_summary() == {
         "ip": "192.0.2.1",
         "hostname": "host.example.",
         "cannonical_name": "1.2.0.192.in-addr.arpa.",
         "canonical_name": None,
     }
+    assert list(LookupIpOutput._to_json_schema()) == [
+        {"data_path": "action_result.data", "data_type": "string"}
+    ]
 
 
 def test_reverse_lookup_missing_ptr_explicitly_serializes_null(monkeypatch):
@@ -145,5 +150,7 @@ def test_reverse_lookup_missing_ptr_explicitly_serializes_null(monkeypatch):
         LookupIpParams(ip="192.0.2.8"), soar, SimpleNamespace(dns_server=None)
     )
 
-    assert result.model_dump() == {"data": None}
-    assert soar.summary is None
+    assert result.get_status() is True
+    assert result.get_param() == {"ip": "192.0.2.8"}
+    assert result.get_data() == []
+    assert result.get_summary() == {}

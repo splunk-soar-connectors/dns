@@ -107,7 +107,7 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 action_result.status | string | | success failure |
 action_result.message | string | | |
 action_result.parameter.ip | string | `ip` | |
-action_result.data.\*.data | string | | dns.google. |
+action_result.data | string | | |
 action_result.summary.ip | string | `ip` | |
 action_result.summary.hostname | string | `host name` `domain` | |
 action_result.summary.cannonical_name | string | | |
