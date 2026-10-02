@@ -1,10 +1,10 @@
 # DNS
 
 Publisher: Splunk <br>
-Connector Version: 2.0.32 <br>
+Connector Version: 2.0.33 <br>
 Product Vendor: Generic <br>
 Product Name: DNS <br>
-Minimum Product Version: 6.3.0
+Minimum Product Version: 7.0.0
 
 This app implements investigative actions that return DNS Records for the object queried
 
@@ -19,20 +19,22 @@ This table lists the configuration variables required to operate DNS. These vari
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **dns_server** | optional | string | IP of the DNS server for lookups |
-**host_name** | optional | string | Hostname to be used in test connectivity |
+**host_name** | required | string | Hostname to be used in test connectivity |
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity <br>
+[test connectivity](#action-test-connectivity) - Resolve the configured test hostname using the asset's DNS server. <br>
 [lookup domain](#action-lookup-domain) - Query DNS records for a Domain or Host Name <br>
 [lookup ip](#action-lookup-ip) - Query Reverse DNS records for an IP
 
 ## action: 'test connectivity'
 
-Validate the asset configuration for connectivity
+Resolve the configured test hostname using the asset's DNS server.
 
 Type: **test** <br>
 Read only: **True**
+
+Basic test for app.
 
 #### Action Parameters
 
@@ -40,7 +42,12 @@ No parameters are required for this action
 
 #### Action Output
 
-No Output
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failure |
+action_result.message | string | | |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
 
 ## action: 'lookup domain'
 
@@ -62,17 +69,19 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
-action_result.status | string | | success failed |
-action_result.parameter.domain | string | `host name` `domain` | test.com |
+action_result.status | string | | success failure |
+action_result.message | string | | |
+action_result.parameter.domain | string | `host name` `domain` | |
 action_result.parameter.type | string | | |
 action_result.data.\*.record_info_objects.\*.record_info | string | `ip` | 122.122.122.122 |
 action_result.data.\*.record_infos | string | `ip` | 122.122.122.122 |
-action_result.summary.cannonical_name | string | | phantomtest.com. test.com. |
-action_result.summary.canonical_name | string | | |
-action_result.summary.hostname | string | `host name` `domain` | ffobaaar.com |
-action_result.summary.record_info | string | `ip` | 122.122.122.122 |
+action_result.data.\*.domain | string | `host name` `domain` | |
+action_result.data.\*.type | string | | |
 action_result.summary.total_record_infos | numeric | | 1 6 |
-action_result.message | string | | None of DNS query names exist: ['ffobaaar.com.', 'ffobaaar.com.localdomain.'] Record info: 54.239.25.192, Total record infos: 6, Cannonical name: amazon.com. |
+action_result.summary.record_info | string | `ip` | 122.122.122.122 |
+action_result.summary.hostname | string | `host name` `domain` | ffobaaar.com |
+action_result.summary.cannonical_name | string | | phantomtest.com. |
+action_result.summary.canonical_name | string | | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -95,14 +104,14 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
-action_result.status | string | | success failed |
-action_result.parameter.ip | string | `ip` | 122.122.122.122 123.123.123.123 |
-action_result.data | string | | |
-action_result.summary.cannonical_name | string | | 122.122.122.122.in-addr.arpa. |
+action_result.status | string | | success failure |
+action_result.message | string | | |
+action_result.parameter.ip | string | `ip` | |
+action_result.data.\*.data | string | | dns.google. |
+action_result.summary.ip | string | `ip` | |
+action_result.summary.hostname | string | `host name` `domain` | |
+action_result.summary.cannonical_name | string | | |
 action_result.summary.canonical_name | string | | |
-action_result.summary.hostname | string | `host name` `domain` | ec2-52-91-186-198.compute-1.test.com. |
-action_result.summary.ip | string | `ip` | 122.122.122.122 |
-action_result.message | string | | Ip: 122.122.122.122 Hostname: ec2-52-91-186-198.compute-1.test.com. Cannonical name: 122.122.122.122.in-addr.arpa. The DNS query name does not exist: 123.123.123.123.in-addr.arpa. |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -110,7 +119,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

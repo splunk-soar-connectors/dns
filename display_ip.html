@@ -1,17 +1,8 @@
 {% extends 'widgets/widget_template.html' %}
-{% load custom_template %}
-{% block custom_title_prop %}
-  {% if title_logo %}
-    style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"
-  {% endif %}
-{% endblock %}
-{% block title1 %}{{ title1 }}{% endblock %}
-{% block title2 %}{{ title2 }}{% endblock %}
-{% block custom_tools %}{% endblock %}
 {% block widget_content %}
   <!-- Main Start Block -->
   <!-- File: display_ip.html
-  Copyright (c) 2016-2025 Splunk Inc.
+  Copyright (c) 2016-2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -89,15 +80,15 @@ and limitations under the License.
       <!------------------- For each Result ---------------------->
       <h3 class="wf-h3-style">Info</h3>
       <table class="wf-table-vertical">
-        {% if result.param.domain %}
+        {% if result.domain %}
           <tr>
             <td>
               <b>Domain</b>
             </td>
             <td>
               <a href="javascript:;"
-                 onclick="context_menu(this, [{'contains': ['domain'], 'value': '{{ result.param.domain|escapejs }}' }], 0, {{ container.id }}, null, false);">
-                {{ result.param.domain }}
+                 onclick="context_menu(this, [{'contains': ['domain'], 'value': '{{ result.domain|e }}' }], 0, {{ container }}, null, false);">
+                {{ result.domain }}
                 &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
               </a>
             </td>
@@ -106,15 +97,15 @@ and limitations under the License.
             <td>
               <b>Type</b>
             </td>
-            <td>{{ result.param.type }}</td>
+            <td>{{ result.type }}</td>
           </tr>
         {% endif %}
       </table>
       <br>
       <!-- IPs -->
-      {% if result.data.record_infos %}
+      {% if result.record_infos %}
         <table class="wf-table-horizontal">
-          {% if result.param.type == 'A' or result.param.type == 'AAAA' %}
+          {% if result.type == 'A' or result.type == 'AAAA' %}
             <tr>
               <th>IP</th>
             </tr>
@@ -123,12 +114,12 @@ and limitations under the License.
               <th>Record Info</th>
             </tr>
           {% endif %}
-          {% if result.param.type == 'A' or result.param.type == 'AAAA' %}
-            {% for record_info in result.data.record_infos %}
+          {% if result.type == 'A' or result.type == 'AAAA' %}
+            {% for record_info in result.record_infos %}
               <tr>
                 <td>
                   <a href="javascript:;"
-                     onclick="context_menu(this, [{'contains': ['ip', 'ipv6'], 'value': '{{ record_info|escapejs }}' }], 0, {{ container.id }}, null, false);">
+                     onclick="context_menu(this, [{'contains': ['ip', 'ipv6'], 'value': '{{ record_info|e }}' }], 0, {{ container }}, null, false);">
                     {{ record_info }}
                     &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
                   </a>
@@ -136,7 +127,7 @@ and limitations under the License.
               </tr>
             {% endfor %}
           {% else %}
-            {% for record_info in result.data.record_infos %}
+            {% for record_info in result.record_infos %}
               <tr>
                 <td>{{ record_info }}</td>
               </tr>
