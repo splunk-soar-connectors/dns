@@ -11,4 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""DNS SOAR application package."""
+"""Constants shared by the DNS app."""
+
+APP_NAME = "DNS"
+APP_VERSION = "2.0.33"
+
+LOOKUP_QUERY_ERROR = "Lookup query failed"
+TARGET_NOT_HOSTNAME = "Target is not a hostname"
+TARGET_NOT_IP = "Target is not an IP"
