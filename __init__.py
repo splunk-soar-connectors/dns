@@ -11,11 +11,4 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Allow the app package and dnspython's shared ``dns`` package to coexist."""
-
-from pkgutil import extend_path
-
-# The repository slug and dnspython's import package are both named ``dns``.
-# Extending the package path lets the SDK manifest loader import ``dns.src`` while
-# keeping dnspython's ``dns.resolver`` modules available from site-packages.
-__path__ = extend_path(__path__, __name__)
+"""DNS SOAR application package."""

@@ -73,10 +73,11 @@ action_result.status | string | | success failure |
 action_result.message | string | | |
 action_result.parameter.domain | string | `host name` `domain` | |
 action_result.parameter.type | string | | |
-action_result.data.\*.record_info_objects.\*.record_info | string | `ip` | 122.122.122.122 |
-action_result.data.\*.record_infos | string | `ip` | 122.122.122.122 |
 action_result.data.\*.domain | string | `host name` `domain` | |
 action_result.data.\*.type | string | | |
+action_result.data.\*.record_info | string | `ip` | 122.122.122.122 |
+action_result.data.\*.record_info_objects.\*.record_info | string | `ip` | 122.122.122.122 |
+action_result.data.\*.record_infos | string | `ip` | 122.122.122.122 |
 action_result.summary.total_record_infos | numeric | | 1 6 |
 action_result.summary.record_info | string | `ip` | 122.122.122.122 |
 action_result.summary.hostname | string | `host name` `domain` | ffobaaar.com |
@@ -98,7 +99,7 @@ The <b>lookup ip</b> action takes an IP address parameter. The IP address (IPv4 
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**ip** | required | IP to resolve | string | `ip` |
+**ip** | required | IP to resolve | string | `ip` `ipv6` |
 
 #### Action Output
 
@@ -106,7 +107,7 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
 action_result.status | string | | success failure |
 action_result.message | string | | |
-action_result.parameter.ip | string | `ip` | |
+action_result.parameter.ip | string | `ip` `ipv6` | |
 action_result.data | string | | |
 action_result.summary.ip | string | `ip` | |
 action_result.summary.hostname | string | `host name` `domain` | |

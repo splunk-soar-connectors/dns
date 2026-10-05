@@ -22,7 +22,6 @@ from .actions.lookup_domain import (
     LookupDomainOutput,
     LookupDomainParams,
     LookupDomainSummary,
-    display_domain_results,
     lookup_domain,
 )
 from .actions.lookup_ip import (
@@ -74,23 +73,21 @@ def test_connectivity(soar: SOARClient, asset: Asset) -> None:
     resolver = Resolver()
     if asset.dns_server:
         resolver.nameservers = [asset.dns_server]
-        soar.set_progress(
+        logger.progress(
             f"Checking connectivity to your defined lookup server ({asset.dns_server})..."
         )
     else:
-        soar.set_progress(
-            f"Using OS level lookup server ({resolver.nameservers[0]})..."
-        )
+        logger.progress(f"Using OS level lookup server ({resolver.nameservers[0]})...")
 
     try:
         resolver.lifetime = 5
         answer = str(resolver.resolve(asset.host_name, "A")[0])
     except Exception as exc:
-        soar.set_progress("Test Connectivity Failed")
+        logger.progress("Test Connectivity Failed")
         raise RuntimeError("Lookup query failed") from exc
 
-    soar.set_progress(f"Found a record for {asset.host_name} as {answer}...")
-    soar.set_progress("Test Connectivity Passed")
+    logger.progress(f"Found a record for {asset.host_name} as {answer}...")
+    logger.progress("Test Connectivity Passed")
     soar.set_message("Connectivity to dns server was successful.")
 
 
@@ -105,8 +102,7 @@ app.register_action(
     params_class=LookupDomainParams,
     output_class=LookupDomainOutput,
     summary_type=LookupDomainSummary,
-    view_handler=display_domain_results,
-    view_template="display_ip.html",
+    render_as="table",
 )
 
 app.register_action(

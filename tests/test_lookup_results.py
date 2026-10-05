@@ -60,7 +60,10 @@ def test_forward_lookup_serializes_full_results_and_unmodelled_dns_fields(monkey
         SimpleNamespace(dns_server=None),
     )
 
-    assert result.model_dump() == {
+    expected_result = {
+        "domain": "example.test",
+        "type": "A",
+        "record_info": "192.0.2.1",
         "record_info_objects": [
             {
                 "text": "192.0.2.1",
@@ -70,9 +73,14 @@ def test_forward_lookup_serializes_full_results_and_unmodelled_dns_fields(monkey
             }
         ],
         "record_infos": ["192.0.2.1"],
-        "domain": "example.test",
-        "type": "A",
     }
+    assert [item.model_dump() for item in result] == [expected_result]
+    assert {
+        "data_path": "action_result.data.*.record_infos",
+        "data_type": "string",
+        "contains": ["ip"],
+        "example_values": ["122.122.122.122"],
+    } in list(forward_module.LookupDomainOutput._to_json_schema())
     assert soar.summary.model_dump(by_alias=True) == {
         "total_record_infos": 1,
         "record_info": "192.0.2.1",
@@ -85,7 +93,7 @@ def test_forward_lookup_serializes_full_results_and_unmodelled_dns_fields(monkey
 def test_forward_lookup_explicitly_serializes_missing_values(monkeypatch):
     class MissingResolver:
         def resolve(self, *_args):
-            raise RuntimeError("None of DNS query names exist: missing.example.")
+            raise RuntimeError("The DNS query name does not exist: missing.example.")
 
     monkeypatch.setattr(
         forward_module, "create_resolver", lambda _server: MissingResolver()
@@ -97,12 +105,15 @@ def test_forward_lookup_explicitly_serializes_missing_values(monkeypatch):
         SimpleNamespace(dns_server=None),
     )
 
-    assert result.model_dump() == {
-        "record_info_objects": [],
-        "record_infos": None,
-        "domain": "missing.example",
-        "type": "A",
-    }
+    assert [item.model_dump() for item in result] == [
+        {
+            "domain": "missing.example",
+            "type": "A",
+            "record_info": None,
+            "record_info_objects": [],
+            "record_infos": None,
+        }
+    ]
     assert soar.message.startswith("Error Code: Error code unavailable.")
 
 

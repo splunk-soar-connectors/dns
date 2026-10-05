@@ -31,7 +31,10 @@ class LookupIpParams(Params):
     """Input parameter for a reverse DNS lookup."""
 
     ip: str = Param(
-        description="IP to resolve", primary=True, required=True, cef_types=["ip"]
+        description="IP to resolve",
+        primary=True,
+        required=True,
+        cef_types=["ip", "ipv6"],
     )
 
 

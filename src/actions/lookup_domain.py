@@ -53,26 +53,44 @@ class RecordInfoOutput(PermissiveActionOutput):
 class LookupDomainOutput(PermissiveActionOutput):
     """Forward lookup results; permissive serialization retains DNS-specific fields."""
 
+    domain: str | None = OutputField(
+        column_name="Domain", cef_types=["host name", "domain"]
+    )
+    type: str | None = OutputField(column_name="Type")
+    record_info: str | None = OutputField(
+        column_name="Record Info", cef_types=["ip"], example_values=["122.122.122.122"]
+    )
     record_info_objects: list[RecordInfoOutput] = OutputField()
-    # The legacy manifest calls this a string even though the connector emits a list.
-    record_infos: str | None = OutputField(
+    record_infos: list[str] | None = OutputField(
         cef_types=["ip"], example_values=["122.122.122.122"]
     )
-    domain: str | None = OutputField(cef_types=["host name", "domain"])
-    type: str | None = OutputField()
+
+    @classmethod
+    def _to_json_schema(
+        cls,
+        parent_datapath: str = "action_result.data.*",
+        column_order_counter=None,
+    ):
+        """Keep the legacy array datapath while validating it as a list of strings."""
+        list_datapath = f"{parent_datapath}.record_infos.*"
+        legacy_datapath = f"{parent_datapath}.record_infos"
+        for field_spec in super()._to_json_schema(
+            parent_datapath, column_order_counter
+        ):
+            if field_spec["data_path"] == list_datapath:
+                yield {**field_spec, "data_path": legacy_datapath}
+            else:
+                yield field_spec
 
 
 class LookupDomainSummary(ActionOutput):
     """Forward lookup summary fields and their legacy aliases."""
 
-    total_record_infos: int | None = OutputField(
-        column_name="Total Record Infos", example_values=[1, 6]
-    )
+    total_record_infos: int | None = OutputField(example_values=[1, 6])
     record_info: str | None = OutputField(
-        column_name="IP Address", cef_types=["ip"], example_values=["122.122.122.122"]
+        cef_types=["ip"], example_values=["122.122.122.122"]
     )
     hostname: str | None = OutputField(
-        column_name="Hostname",
         cef_types=["host name", "domain"],
         example_values=["ffobaaar.com"],
     )
@@ -84,7 +102,7 @@ class LookupDomainSummary(ActionOutput):
 
 def lookup_domain(
     params: LookupDomainParams, soar: SOARClient, asset
-) -> LookupDomainOutput:
+) -> list[LookupDomainOutput]:
     """Query DNS records for a domain or host name."""
     domain = params.domain
     record_type = params.type or "A"
@@ -100,14 +118,23 @@ def lookup_domain(
         answer = resolver.resolve(domain, record_type)
     except Exception as exc:
         message = error_message(exc)
-        if "None of DNS query names exist" in message:
-            soar.set_message(message)
-            return LookupDomainOutput(
-                record_info_objects=[],
-                record_infos=None,
-                domain=domain,
-                type=record_type,
+        if any(
+            phrase in message
+            for phrase in (
+                "None of DNS query names exist",
+                "The DNS query name does not exist",
             )
+        ):
+            soar.set_message(message)
+            return [
+                LookupDomainOutput(
+                    record_info_objects=[],
+                    record_infos=None,
+                    domain=domain,
+                    type=record_type,
+                    record_info=None,
+                )
+            ]
         raise RuntimeError(f"{LOOKUP_QUERY_ERROR}. Error string: '{exc}'") from exc
 
     records = [str(item) for item in answer]
@@ -120,7 +147,13 @@ def lookup_domain(
         "domain": domain,
         "type": record_type,
     }
-    result = LookupDomainOutput(**raw_data)
+    # SOAR's built-in table renderer consumes one output model per row. Repeat
+    # the legacy aggregate fields so their existing datapaths and full payload
+    # remain available alongside the row-oriented table column.
+    results = [
+        LookupDomainOutput(**raw_data, record_info=record_info)
+        for record_info in records
+    ] or [LookupDomainOutput(**raw_data, record_info=None)]
     summary = {
         "total_record_infos": len(records),
         "record_info": records[0] if records else None,
@@ -133,7 +166,7 @@ def lookup_domain(
         f"Record info: {records[0] if records else None}, Total record infos: {len(records)}, "
         f"Cannonical name: {answer.canonical_name}"
     )
-    return result
+    return results
 
 
 def _record_payload(record_info: str, record: Any) -> dict[str, Any]:
@@ -143,8 +176,3 @@ def _record_payload(record_info: str, record: Any) -> dict[str, Any]:
         **{key: value for key, value in raw_fields.items() if not key.startswith("_")},
         "record_info": record_info,
     }
-
-
-def display_domain_results(outputs: list[LookupDomainOutput]) -> dict:
-    """Prepare DNS lookup results for the legacy custom view template."""
-    return {"results": [output.model_dump() for output in outputs]}
