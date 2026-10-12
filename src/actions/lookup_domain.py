@@ -18,6 +18,7 @@ from typing import Any
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import (
     ActionOutput,
+    ActionResult,
     OutputField,
     PermissiveActionOutput,
 )
@@ -51,58 +52,27 @@ class RecordInfoOutput(PermissiveActionOutput):
 
 
 class LookupDomainOutput(PermissiveActionOutput):
-    """Forward lookup results; permissive serialization retains DNS-specific fields."""
+    """Forward lookup data in the aggregate shape used by the legacy action."""
 
-    domain: str | None = OutputField(
-        column_name="Domain", cef_types=["host name", "domain"]
-    )
-    type: str | None = OutputField(column_name="Type")
-    record_info: str | None = OutputField(
-        column_name="Record Info", cef_types=["ip"], example_values=["122.122.122.122"]
-    )
     record_info_objects: list[RecordInfoOutput] = OutputField()
-    record_infos: list[str] | None = OutputField(
+    record_infos: list[str] = OutputField(
         cef_types=["ip"], example_values=["122.122.122.122"]
     )
 
-    @classmethod
-    def _to_json_schema(
-        cls,
-        parent_datapath: str = "action_result.data.*",
-        column_order_counter=None,
-    ):
-        """Keep the legacy array datapath while validating it as a list of strings."""
-        list_datapath = f"{parent_datapath}.record_infos.*"
-        legacy_datapath = f"{parent_datapath}.record_infos"
-        for field_spec in super()._to_json_schema(
-            parent_datapath, column_order_counter
-        ):
-            if field_spec["data_path"] == list_datapath:
-                yield {**field_spec, "data_path": legacy_datapath}
-            else:
-                yield field_spec
-
 
 class LookupDomainSummary(ActionOutput):
-    """Forward lookup summary fields and their legacy aliases."""
+    """Forward lookup summary fields."""
 
     total_record_infos: int | None = OutputField(example_values=[1, 6])
     record_info: str | None = OutputField(
         cef_types=["ip"], example_values=["122.122.122.122"]
     )
-    hostname: str | None = OutputField(
-        cef_types=["host name", "domain"],
-        example_values=["ffobaaar.com"],
-    )
-    canonical_name: str | None = OutputField(
-        alias="cannonical_name", example_values=["phantomtest.com."]
-    )
-    canonical_name_corrected: str | None = OutputField(alias="canonical_name")
+    canonical_name: str | None = OutputField(example_values=["phantomtest.com."])
 
 
 def lookup_domain(
     params: LookupDomainParams, soar: SOARClient, asset
-) -> list[LookupDomainOutput]:
+) -> LookupDomainOutput:
     """Query DNS records for a domain or host name."""
     domain = params.domain
     record_type = params.type or "A"
@@ -125,16 +95,7 @@ def lookup_domain(
                 "The DNS query name does not exist",
             )
         ):
-            soar.set_message(message)
-            return [
-                LookupDomainOutput(
-                    record_info_objects=[],
-                    record_infos=None,
-                    domain=domain,
-                    type=record_type,
-                    record_info=None,
-                )
-            ]
+            return ActionResult(True, message, params.model_dump())
         raise RuntimeError(f"{LOOKUP_QUERY_ERROR}. Error string: '{exc}'") from exc
 
     records = [str(item) for item in answer]
@@ -144,29 +105,18 @@ def lookup_domain(
             for item, record in zip(records, answer, strict=True)
         ],
         "record_infos": records,
-        "domain": domain,
-        "type": record_type,
     }
-    # SOAR's built-in table renderer consumes one output model per row. Repeat
-    # the legacy aggregate fields so their existing datapaths and full payload
-    # remain available alongside the row-oriented table column.
-    results = [
-        LookupDomainOutput(**raw_data, record_info=record_info)
-        for record_info in records
-    ] or [LookupDomainOutput(**raw_data, record_info=None)]
     summary = {
         "total_record_infos": len(records),
         "record_info": records[0] if records else None,
-        "hostname": None,
-        "cannonical_name": str(answer.canonical_name),
-        "canonical_name": None,
+        "canonical_name": str(answer.canonical_name),
     }
     soar.set_summary(LookupDomainSummary(**summary))
     soar.set_message(
         f"Record info: {records[0] if records else None}, Total record infos: {len(records)}, "
-        f"Cannonical name: {answer.canonical_name}"
+        f"Canonical name: {answer.canonical_name}"
     )
-    return results
+    return LookupDomainOutput(**raw_data)
 
 
 def _record_payload(record_info: str, record: Any) -> dict[str, Any]:

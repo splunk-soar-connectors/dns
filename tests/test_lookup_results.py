@@ -42,7 +42,10 @@ def test_forward_lookup_serializes_full_results_and_unmodelled_dns_fields(monkey
         def __str__(self):
             return self.text
 
-    records = [Record("192.0.2.1", 300, "preserved-extra")]
+    records = [
+        Record("192.0.2.1", 300, "preserved-extra"),
+        Record("192.0.2.2", 600, "second-extra"),
+    ]
 
     class Answer(list):
         canonical_name = "example.test."
@@ -61,9 +64,6 @@ def test_forward_lookup_serializes_full_results_and_unmodelled_dns_fields(monkey
     )
 
     expected_result = {
-        "domain": "example.test",
-        "type": "A",
-        "record_info": "192.0.2.1",
         "record_info_objects": [
             {
                 "text": "192.0.2.1",
@@ -72,21 +72,27 @@ def test_forward_lookup_serializes_full_results_and_unmodelled_dns_fields(monkey
                 "record_info": "192.0.2.1",
             }
         ],
-        "record_infos": ["192.0.2.1"],
+        "record_infos": ["192.0.2.1", "192.0.2.2"],
     }
-    assert [item.model_dump() for item in result] == [expected_result]
+    expected_result["record_info_objects"].append(
+        {
+            "text": "192.0.2.2",
+            "ttl": 600,
+            "vendor_field": "second-extra",
+            "record_info": "192.0.2.2",
+        }
+    )
+    assert result.model_dump() == expected_result
     assert {
-        "data_path": "action_result.data.*.record_infos",
+        "data_path": "action_result.data.*.record_infos.*",
         "data_type": "string",
         "contains": ["ip"],
         "example_values": ["122.122.122.122"],
     } in list(forward_module.LookupDomainOutput._to_json_schema())
     assert soar.summary.model_dump(by_alias=True) == {
-        "total_record_infos": 1,
+        "total_record_infos": 2,
         "record_info": "192.0.2.1",
-        "hostname": None,
-        "cannonical_name": "example.test.",
-        "canonical_name": None,
+        "canonical_name": "example.test.",
     }
 
 
@@ -105,19 +111,12 @@ def test_forward_lookup_explicitly_serializes_missing_values(monkeypatch):
         SimpleNamespace(dns_server=None),
     )
 
-    assert [item.model_dump() for item in result] == [
-        {
-            "domain": "missing.example",
-            "type": "A",
-            "record_info": None,
-            "record_info_objects": [],
-            "record_infos": None,
-        }
-    ]
-    assert soar.message.startswith("Error Code: Error code unavailable.")
+    assert result.get_status() is True
+    assert result.get_data() == []
+    assert result.get_message().startswith("Error Code: Error code unavailable.")
 
 
-def test_reverse_lookup_serializes_aliases_and_null_defaults(monkeypatch):
+def test_reverse_lookup_serializes_canonical_summary(monkeypatch):
     class Answer(list):
         canonical_name = "1.2.0.192.in-addr.arpa."
 
@@ -138,8 +137,7 @@ def test_reverse_lookup_serializes_aliases_and_null_defaults(monkeypatch):
     assert result.get_summary() == {
         "ip": "192.0.2.1",
         "hostname": "host.example.",
-        "cannonical_name": "1.2.0.192.in-addr.arpa.",
-        "canonical_name": None,
+        "canonical_name": "1.2.0.192.in-addr.arpa.",
     }
     assert list(LookupIpOutput._to_json_schema()) == [
         {"data_path": "action_result.data", "data_type": "string"}

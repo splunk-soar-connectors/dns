@@ -102,7 +102,7 @@ app.register_action(
     params_class=LookupDomainParams,
     output_class=LookupDomainOutput,
     summary_type=LookupDomainSummary,
-    render_as="table",
+    render_as="json",
 )
 
 app.register_action(

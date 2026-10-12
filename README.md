@@ -73,16 +73,11 @@ action_result.status | string | | success failure |
 action_result.message | string | | |
 action_result.parameter.domain | string | `host name` `domain` | |
 action_result.parameter.type | string | | |
-action_result.data.\*.domain | string | `host name` `domain` | |
-action_result.data.\*.type | string | | |
-action_result.data.\*.record_info | string | `ip` | 122.122.122.122 |
 action_result.data.\*.record_info_objects.\*.record_info | string | `ip` | 122.122.122.122 |
-action_result.data.\*.record_infos | string | `ip` | 122.122.122.122 |
+action_result.data.\*.record_infos.\* | string | `ip` | 122.122.122.122 |
 action_result.summary.total_record_infos | numeric | | 1 6 |
 action_result.summary.record_info | string | `ip` | 122.122.122.122 |
-action_result.summary.hostname | string | `host name` `domain` | ffobaaar.com |
-action_result.summary.cannonical_name | string | | phantomtest.com. |
-action_result.summary.canonical_name | string | | |
+action_result.summary.canonical_name | string | | phantomtest.com. |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -111,7 +106,6 @@ action_result.parameter.ip | string | `ip` `ipv6` | |
 action_result.data | string | | |
 action_result.summary.ip | string | `ip` | |
 action_result.summary.hostname | string | `host name` `domain` | |
-action_result.summary.cannonical_name | string | | |
 action_result.summary.canonical_name | string | | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |

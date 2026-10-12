@@ -60,8 +60,7 @@ class LookupIpSummary(ActionOutput):
     hostname: str | None = OutputField(
         column_name="Hostname", cef_types=["host name", "domain"]
     )
-    canonical_name: str | None = OutputField(alias="cannonical_name")
-    canonical_name_corrected: str | None = OutputField(alias="canonical_name")
+    canonical_name: str | None = OutputField()
 
 
 def lookup_ip(params: LookupIpParams, soar: SOARClient, asset) -> LookupIpOutput:
@@ -90,12 +89,11 @@ def lookup_ip(params: LookupIpParams, soar: SOARClient, asset) -> LookupIpOutput
     summary = LookupIpSummary(
         ip=ip,
         hostname=hostname,
-        cannonical_name=canonical_name,
-        canonical_name=None,
+        canonical_name=canonical_name,
     )
     result = ActionResult(
         True,
-        f"Ip: {ip}\nHostname: {hostname}\nCannonical name: {canonical_name}",
+        f"Ip: {ip}\nHostname: {hostname}\nCanonical name: {canonical_name}",
         params.model_dump(),
     )
     result.add_data(hostname)
