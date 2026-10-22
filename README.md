@@ -103,7 +103,7 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 action_result.status | string | | success failure |
 action_result.message | string | | |
 action_result.parameter.ip | string | `ip` `ipv6` | |
-action_result.data | string | | |
+action_result.data.\*.hostname | string | `host name` `domain` | dns.google. |
 action_result.summary.ip | string | `ip` | |
 action_result.summary.hostname | string | `host name` `domain` | |
 action_result.summary.canonical_name | string | | |

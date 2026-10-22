@@ -32,7 +32,7 @@ class FakeSOAR:
         self.message = message
 
 
-def test_forward_lookup_serializes_full_results_and_unmodelled_dns_fields(monkeypatch):
+def test_forward_lookup_serializes_records_without_internal_dns_fields(monkeypatch):
     class Record:
         def __init__(self, text, ttl, vendor_field):
             self.text = text
@@ -65,23 +65,11 @@ def test_forward_lookup_serializes_full_results_and_unmodelled_dns_fields(monkey
 
     expected_result = {
         "record_info_objects": [
-            {
-                "text": "192.0.2.1",
-                "ttl": 300,
-                "vendor_field": "preserved-extra",
-                "record_info": "192.0.2.1",
-            }
+            {"record_info": "192.0.2.1"},
+            {"record_info": "192.0.2.2"},
         ],
         "record_infos": ["192.0.2.1", "192.0.2.2"],
     }
-    expected_result["record_info_objects"].append(
-        {
-            "text": "192.0.2.2",
-            "ttl": 600,
-            "vendor_field": "second-extra",
-            "record_info": "192.0.2.2",
-        }
-    )
     assert result.model_dump() == expected_result
     assert {
         "data_path": "action_result.data.*.record_infos.*",
@@ -131,16 +119,24 @@ def test_reverse_lookup_serializes_canonical_summary(monkeypatch):
         LookupIpParams(ip="192.0.2.1"), soar, SimpleNamespace(dns_server=None)
     )
 
-    assert result.get_status() is True
-    assert result.get_param() == {"ip": "192.0.2.1"}
-    assert result.get_data() == ["host.example."]
-    assert result.get_summary() == {
+    assert isinstance(result, LookupIpOutput)
+    assert result.model_dump() == {"hostname": "host.example."}
+    assert soar.message == (
+        "Ip: 192.0.2.1\nHostname: host.example.\n"
+        "Canonical name: 1.2.0.192.in-addr.arpa."
+    )
+    assert soar.summary.model_dump() == {
         "ip": "192.0.2.1",
         "hostname": "host.example.",
         "canonical_name": "1.2.0.192.in-addr.arpa.",
     }
     assert list(LookupIpOutput._to_json_schema()) == [
-        {"data_path": "action_result.data", "data_type": "string"}
+        {
+            "data_path": "action_result.data.*.hostname",
+            "data_type": "string",
+            "contains": ["host name", "domain"],
+            "example_values": ["dns.google."],
+        }
     ]
 
 

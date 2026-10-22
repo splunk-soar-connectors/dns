@@ -13,13 +13,12 @@
 # limitations under the License.
 """Reverse DNS lookup action."""
 
+from dns.reversename import from_address
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import (
     ActionOutput,
     ActionResult,
     OutputField,
-    OutputFieldSpecification,
-    PermissiveActionOutput,
 )
 from soar_sdk.params import Param, Params
 
@@ -38,19 +37,12 @@ class LookupIpParams(Params):
     )
 
 
-class LookupIpOutput(PermissiveActionOutput):
-    """Reverse lookup output schema retaining the legacy scalar data path."""
+class LookupIpOutput(ActionOutput):
+    """Resolved hostname returned as a structured DNS result."""
 
-    data: str | None = OutputField(example_values=["dns.google."])
-
-    @classmethod
-    def _to_json_schema(
-        cls, parent_datapath: str = "action_result.data.*", column_order_counter=None
-    ):
-        """Map the scalar legacy payload to its original root datapath."""
-        yield OutputFieldSpecification(
-            data_path="action_result.data", data_type="string"
-        )
+    hostname: str | None = OutputField(
+        cef_types=["host name", "domain"], example_values=["dns.google."]
+    )
 
 
 class LookupIpSummary(ActionOutput):
@@ -65,8 +57,6 @@ class LookupIpSummary(ActionOutput):
 
 def lookup_ip(params: LookupIpParams, soar: SOARClient, asset) -> LookupIpOutput:
     """Resolve the PTR record for an IPv4 or IPv6 address."""
-    from dns.reversename import from_address
-
     ip = params.ip
     if not is_ip_address(ip):
         return ActionResult(False, TARGET_NOT_IP, params.model_dump())
@@ -91,11 +81,8 @@ def lookup_ip(params: LookupIpParams, soar: SOARClient, asset) -> LookupIpOutput
         hostname=hostname,
         canonical_name=canonical_name,
     )
-    result = ActionResult(
-        True,
-        f"Ip: {ip}\nHostname: {hostname}\nCanonical name: {canonical_name}",
-        params.model_dump(),
+    soar.set_message(
+        f"Ip: {ip}\nHostname: {hostname}\nCanonical name: {canonical_name}"
     )
-    result.add_data(hostname)
-    result.set_summary(summary.model_dump(by_alias=True))
-    return result
+    soar.set_summary(summary)
+    return LookupIpOutput(hostname=hostname)

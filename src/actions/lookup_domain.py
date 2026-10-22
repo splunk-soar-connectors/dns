@@ -13,14 +13,11 @@
 # limitations under the License.
 """Forward DNS lookup action."""
 
-from typing import Any
-
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import (
     ActionOutput,
     ActionResult,
     OutputField,
-    PermissiveActionOutput,
 )
 from soar_sdk.params import Param, Params
 
@@ -45,13 +42,13 @@ class LookupDomainParams(Params):
     )
 
 
-class RecordInfoOutput(PermissiveActionOutput):
+class RecordInfoOutput(ActionOutput):
     """One DNS record string."""
 
     record_info: str = OutputField(cef_types=["ip"], example_values=["122.122.122.122"])
 
 
-class LookupDomainOutput(PermissiveActionOutput):
+class LookupDomainOutput(ActionOutput):
     """Forward lookup data in the aggregate shape used by the legacy action."""
 
     record_info_objects: list[RecordInfoOutput] = OutputField()
@@ -99,13 +96,6 @@ def lookup_domain(
         raise RuntimeError(f"{LOOKUP_QUERY_ERROR}. Error string: '{exc}'") from exc
 
     records = [str(item) for item in answer]
-    raw_data: dict[str, Any] = {
-        "record_info_objects": [
-            _record_payload(item, record)
-            for item, record in zip(records, answer, strict=True)
-        ],
-        "record_infos": records,
-    }
     summary = {
         "total_record_infos": len(records),
         "record_info": records[0] if records else None,
@@ -116,13 +106,9 @@ def lookup_domain(
         f"Record info: {records[0] if records else None}, Total record infos: {len(records)}, "
         f"Canonical name: {answer.canonical_name}"
     )
-    return LookupDomainOutput(**raw_data)
-
-
-def _record_payload(record_info: str, record: Any) -> dict[str, Any]:
-    """Keep public fields exposed by a DNS record in permissive result serialization."""
-    raw_fields = getattr(record, "__dict__", {})
-    return {
-        **{key: value for key, value in raw_fields.items() if not key.startswith("_")},
-        "record_info": record_info,
-    }
+    return LookupDomainOutput(
+        record_info_objects=[
+            RecordInfoOutput(record_info=record) for record in records
+        ],
+        record_infos=records,
+    )
