@@ -1,7 +1,7 @@
 # DNS
 
 Publisher: Splunk <br>
-Connector Version: 2.0.33 <br>
+Connector Version: 3.0.0 <br>
 Product Vendor: Generic <br>
 Product Name: DNS <br>
 Minimum Product Version: 7.0.0
