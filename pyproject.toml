@@ -1,6 +1,6 @@
 [project]
 name = "phantom_dns"
-version = "3.0.0"
+version = "3.0.1"
 description = "This app implements investigative actions that return DNS Records for the object queried"
 license = "Copyright (c) 2016-2025 Splunk Inc."
 requires-python = ">=3.13, <3.16, !=3.14.*"
